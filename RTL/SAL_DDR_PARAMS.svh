@@ -1,5 +1,5 @@
-`ifndef __SAL_DDR2_TYPEDEF_SVH__
-`define __SAL_DDR2_TYPEDEF_SVH__
+`ifndef __SAL_DDR_TYPEDEF_SVH__
+`define __SAL_DDR_TYPEDEF_SVH__
 
 // for simulation only
 `define CLK_PERIOD                              2.5
@@ -59,4 +59,4 @@ function [`DRAM_CA_WIDTH-1:0] get_dram_ca(input [`AXI_ADDR_WIDTH-1:0] addr);
     return addr[`DRAM_CA_WIDTH-1:0];
 endfunction
 
-`endif /* __SAL_DDR2_TYPEDEF_SVH__ */
+`endif /* __SAL_DDR_TYPEDEF_SVH__ */

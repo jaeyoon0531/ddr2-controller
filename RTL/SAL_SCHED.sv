@@ -1,5 +1,5 @@
 `include "TIME_SCALE.svh"
-`include "SAL_DDR2_PARAMS.svh"
+`include "SAL_DDR_PARAMS.svh"
 
 module SAL_SCHED
 (
@@ -10,7 +10,7 @@ module SAL_SCHED
     // requests from banks
     BK_SCHED_IF                 bk_sched_if[`DRAM_BK_CNT],
 
-    DFI_CTRL_IF                 dfi_ctrl_if
+    DFI_CTRL_IF.SRC             dfi_ctrl_if
 );
 
     always_comb begin

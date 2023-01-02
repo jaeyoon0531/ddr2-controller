@@ -1,5 +1,5 @@
 `include "TIME_SCALE.svh"
-`include "SAL_DDR2_PARAMS.svh"
+`include "SAL_DDR_PARAMS.svh"
 
 interface DFI_CTRL_IF
 (

@@ -1,7 +1,7 @@
 `include "TIME_SCALE.svh"
-`include "SAL_DDR2_PARAMS.svh"
+`include "SAL_DDR_PARAMS.svh"
 
-module SAL_DDR2_CTRL
+module SAL_DDR_CTRL
 (
     // clock & reset
     input                       clk,
@@ -18,9 +18,9 @@ module SAL_DDR2_CTRL
     AXI_R_IF.SRC                axi_r_if,
 
     // DFI interface
-    DFI_CTRL_IF                 dfi_ctrl_if,
-    DFI_WR_IF                   dfi_wr_if,
-    DFI_RD_IF                   dfi_rd_if
+    DFI_CTRL_IF.SRC             dfi_ctrl_if,
+    DFI_WR_IF.SRC               dfi_wr_if,
+    DFI_RD_IF.DST               dfi_rd_if
 );
 
     BK_REQ_IF                   bk_req_if_arr[`DRAM_BK_CNT] (.*);
@@ -76,4 +76,4 @@ module SAL_DDR2_CTRL
         .dfi_ctrl_if                (dfi_ctrl_if)
     );
 
-endmodule // SAL_DDR2_CTRL
+endmodule // SAL_DDR_CTRL

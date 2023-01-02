@@ -1,5 +1,5 @@
 `include "TIME_SCALE.svh"
-`include "SAL_DDR2_PARAMS.svh"
+`include "SAL_DDR_PARAMS.svh"
 
 module SAL_TB_TOP;
 
@@ -50,7 +50,7 @@ module SAL_TB_TOP;
     wire    [7:0]                   ddr_dm_rdqs;
     wire    [7:0]                   ddr_rdqs_n;
 
-    SAL_DDR2_CTRL                   u_mem_ctrl
+    SAL_DDR_CTRL                   u_mem_ctrl
     (
         .clk                        (clk),
         .rst_n                      (rst_n),

@@ -6,9 +6,9 @@ module DDRPHY
     input   wire                    rst_n,
 
     // DFI interface (interface with the controller)
-    DFI_CTRL_IF                     dfi_ctrl_if,
-    DFI_WR_IF                       dfi_wr_if,
-    DFI_RD_IF                       dfi_rd_if,
+    DFI_CTRL_IF.DST                 dfi_ctrl_if,
+    DFI_WR_IF.DST                   dfi_wr_if,
+    DFI_RD_IF.SRC                   dfi_rd_if,
 
     // command and address
     output  logic                   ck,
