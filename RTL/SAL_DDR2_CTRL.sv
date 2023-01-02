@@ -20,11 +20,14 @@ module SAL_DDR2_CTRL
 
     // DFI interface
     DFI_CTRL_INTF               dfi_ctrl_intf,
+    DFI_WR_INTF                 dfi_wr_intf,
     DFI_RD_INTF                 dfi_rd_intf
 );
 
-    BK_REQ_INTF                 bk_req_intf_arr[`DRAM_BK_CNT];
-    BK_SCHED_INTF               bk_sched_intf_arr[`DRAM_BK_CNT];
+    BK_REQ_INTF                 bk_req_intf_arr[`DRAM_BK_CNT] (.*);
+    BK_SCHED_INTF               bk_sched_intf_arr[`DRAM_BK_CNT] (.*);
+    BK_TIMING_INTF              bk_timing_intf (.*);
+    SCHED_TIMING_INTF           sched_timing_intf (.*);
 
     SAL_ADDR_DECODER            u_decoder
     (
@@ -45,7 +48,11 @@ module SAL_DDR2_CTRL
             .rst_n                      (rst_n),
 
             .bk_req_intf                (bk_req_intf_arr[geni]),
-            .bk_sched_intf              (bk_sched_intf_arr[geni])
+            .bk_timing_intf             (bk_timing_intf),
+            .bk_sched_intf              (bk_sched_intf_arr[geni]),
+
+            .pb_ref_req_i               (1'b0),
+            .pb_ref_gnt_o               ()
         );
     end
     endgenerate
@@ -55,7 +62,7 @@ module SAL_DDR2_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .sched_intf                 (bk_sched_intf_arr),
+        .bk_sched_intf              (bk_sched_intf_arr),
         .dfi_ctrl_intf              (dfi_ctrl_intf)
     );
 

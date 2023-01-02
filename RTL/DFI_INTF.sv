@@ -1,4 +1,3 @@
-`include "AXI_TYPEDEFS.svh"
 `include "SAL_DDR2_PARAMS.svh"
 
 interface DFI_CTRL_INTF
@@ -7,12 +6,12 @@ interface DFI_CTRL_INTF
     input                       rst_n
 );
     logic                       cke;
-    logic   [1:0]               cs_n;
+    logic   [`DFI_CS_WIDTH-1:0] cs_n;
     logic                       ras_n;
     logic                       cas_n;
     logic                       we_n;
-    logic   [1:0]               ba;
-    logic   [14:0]              addr;
+    logic   [`DFI_BA_WIDTH-1:0] ba;
+    logic   [`DFI_ADDR_WIDTH-1:0]   addr;
     logic                       odt;
 
 endinterface

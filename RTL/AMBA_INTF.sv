@@ -1,4 +1,4 @@
-`include "AMBA_TYPEDEFS.svh"
+`include "SAL_DDR2_PARAMS.svh"
 
 // DONE: merge AW and AR interfaces 
 
@@ -24,7 +24,7 @@ interface AXI_A_INTF
     // synthesis translate_off
 
     // driver side
-    function reset();   // does not consume timing
+    function void reset();   // does not consume timing
         avalid                      = 1'b0;
         aid                         = 'hx;
         aaddr                       = 'hx;
@@ -48,6 +48,7 @@ interface AXI_A_INTF
             @(posedge clk);
         end
         @(posedge clk);
+        reset();
     endtask
     //
 

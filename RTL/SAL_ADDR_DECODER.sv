@@ -20,26 +20,30 @@ module SAL_ADDR_DECODER
     generate
     for (geni=0; geni<`DRAM_BK_CNT; geni++) begin: bank_ctrl_signals
         always_comb begin
-            bk_axi_a_intf[geni].id      = icnt_axi_a_intf.aid;
-            bk_axi_a_intf[geni].ra      = get_dram_ra(icnt_axi_a_intf.aaddr);
-            bk_axi_a_intf[geni].ca      = get_dram_ca(icnt_axi_a_intf.aaddr);
-            bk_axi_a_intf[geni].len     = icnt_axi_a_intf.alen;
-            bk_axi_a_intf[geni].wr      = 1'b0;
+            bk_req_intf_arr[geni].id    = icnt_axi_a_intf.aid;
+            bk_req_intf_arr[geni].ra    = get_dram_ra(icnt_axi_a_intf.aaddr);
+            bk_req_intf_arr[geni].ca    = get_dram_ca(icnt_axi_a_intf.aaddr);
+            bk_req_intf_arr[geni].len   = icnt_axi_a_intf.alen;
+            bk_req_intf_arr[geni].wr    = 1'b0;
         end
     end
     endgenerate
 
     always_comb begin
+        /*
         // get the target bank address form the request address
         logic   [`DRAM_BA_WIDTH-1:0]ba;
         ba                          = get_dram_ba(icnt_axi_a_intf.aaddr);
 
         // connect the target bank controller's signals to the input
-        for (int i=0; i<`DRAM_BK_CNT; i++) begin
-            bk_axi_a_intf[i].valid      = 1'b0;
+        for (int i=0; i<`DRAM_BK_CNT; i=i+1) begin
+            bk_req_intf_arr[i].valid    = 1'b0;
         end
-        bk_axi_a_intf[ba].valid     = icnt_axi_a_intf.avalid;
-        icnt_axi_a_intf.aready      = bk_axi_a_intf[ba].ready;
+        bk_req_intf_arr[ba].valid   = icnt_axi_a_intf.avalid;
+        icnt_axi_a_intf.aready      = bk_req_intf_arr[ba].ready;
+        */
+        bk_req_intf_arr[0].valid    = icnt_axi_a_intf.avalid;
+        icnt_axi_a_intf.aready      = bk_req_intf_arr[0].ready;
     end
 
 endmodule // SAL_ADDR_DECODER

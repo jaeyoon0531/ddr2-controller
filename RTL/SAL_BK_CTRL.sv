@@ -6,7 +6,7 @@ module SAL_BK_CTRL
 (
     // clock & reset
     input                       clk,
-    input                       rst,
+    input                       rst_n,
 
     // request from the address decoder
     BK_REQ_INTF                 bk_req_intf,
@@ -16,8 +16,8 @@ module SAL_BK_CTRL
     BK_SCHED_INTF               bk_sched_intf,
 
     // per-bank auto-refresh requests
-    input   wire                pb_aref_req_i,
-    output  logic               pb_aref_gnt_o
+    input   wire                pb_ref_req_i,
+    output  logic               pb_ref_gnt_o
 );
 
     localparam                  S_CLOSED    = 1'b0,
@@ -26,7 +26,7 @@ module SAL_BK_CTRL
     // current state
     logic                       state,              state_n;                        
     // current row address                                            
-    logic   [`DRAM_RA_WIDTH-1:0]cur_ra,         cur_ra_n;
+    logic   [`DRAM_RA_WIDTH-1:0]cur_ra,             cur_ra_n;
 
     wire                        is_t_rcd_met,
                                 is_t_rp_met,
@@ -35,11 +35,21 @@ module SAL_BK_CTRL
                                 is_t_rtp_met,
                                 is_t_wtp_met;
 
+    always_ff @(posedge clk)
+        if (rst_n) begin
+            state                   <= S_CLOSED;
+            cur_ra                  <= 'h0;
+        end
+        else begin
+            state                   <= state_n;
+            cur_ra                  <= cur_ra_n;
+        end
+
     always_comb begin
         cur_ra_n                    = cur_ra;
         state_n                     = state;
 
-        pb_aref_gnt_o               = 1'b0;
+        pb_ref_gnt_o                = 1'b0;
         bk_req_intf.ready           = 1'b0;
 
         bk_sched_intf.ra            = bk_req_intf.ra;
@@ -54,10 +64,10 @@ module SAL_BK_CTRL
         case (state)
             S_CLOSED: begin     // the bank is closed
                 if (is_t_rp_met & is_t_rfc_met) begin
-                    if (pb_aref_req_i) begin
+                    if (pb_ref_req_i) begin
                         bk_sched_intf.ref_req       = 1'b1;
                         if (bk_sched_intf.ref_gnt) begin
-                            pb_aref_gnt_o               = 1'b1;
+                            pb_ref_gnt_o                = 1'b1;
                         end
                     end
                     else if (bk_req_intf.valid) begin    // a new request comes
@@ -99,7 +109,7 @@ module SAL_BK_CTRL
         endcase
     end
 
-    SAL_TIMING_CNTR  #(.CNTR_WIDTH(T_RCD_WIDTH)) u_rcd_cnt
+    SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_RCD_WIDTH)) u_rcd_cnt
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
@@ -109,7 +119,7 @@ module SAL_BK_CTRL
         .is_zero_o                  (is_t_rcd_met)
     );
 
-    SAL_TIMING_CNTR  #(.CNTR_WIDTH(T_RP_WIDTH)) u_rp_cnt
+    SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_RP_WIDTH)) u_rp_cnt
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
@@ -119,7 +129,7 @@ module SAL_BK_CTRL
         .is_zero_o                  (is_t_rp_met)
     );
 
-    SAL_TIMING_CNTR  #(.CNTR_WIDTH(T_RAS_WIDTH)) u_ras_cnt
+    SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_RAS_WIDTH)) u_ras_cnt
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
@@ -129,7 +139,7 @@ module SAL_BK_CTRL
         .is_zero_o                  (is_t_ras_met)
     );
 
-    SAL_TIMING_CNTR  #(.CNTR_WIDTH(T_RFC_WIDTH)) u_rfc_cnt
+    SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_RFC_WIDTH)) u_rfc_cnt
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
@@ -139,7 +149,7 @@ module SAL_BK_CTRL
         .is_zero_o                  (is_t_rfc_met)
     );
 
-    SAL_TIMING_CNTR  #(.CNTR_WIDTH(T_RTP_WIDTH)) u_rtp_cnt
+    SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_RTP_WIDTH)) u_rtp_cnt
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
@@ -149,7 +159,7 @@ module SAL_BK_CTRL
         .is_zero_o                  (is_t_rtp_met)
     );
 
-    SAL_TIMING_CNTR  #(.CNTR_WIDTH(T_WTP_WIDTH)) u_wtp_cnt
+    SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_WTP_WIDTH)) u_wtp_cnt
     (
         .clk                        (clk),
         .rst_n                      (rst_n),

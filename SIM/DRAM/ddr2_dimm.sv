@@ -8,8 +8,8 @@ module ddr2_dimm (
     input   wire                ras_n,
     input   wire                cas_n,
     input   wire                we_n,
-    input   wire    [1:0]       ba,
-    input   wire    [14:0]      addr,
+    input   wire    [`DRAM_BA_WIDTH-1:0]    ba,
+    input   wire    [`DRAM_ADDR_WIDTH-1:0]  addr,
     input   wire                odt,
     inout   wire    [63:0]      dq,
     inout   wire    [7:0]       dqs,
@@ -20,7 +20,7 @@ module ddr2_dimm (
 
     genvar gen_chip;
 
-    for (gen_chip=0; gen_chip<16; gen_chip=gen_chip+1) begin: chip
+    for (gen_chip=0; gen_chip<8; gen_chip=gen_chip+1) begin: chip
         ddr2_model                      u_dram
         (
             // command and address
@@ -36,11 +36,11 @@ module ddr2_dimm (
             .odt                        (odt),
 
             // data
-            .dq                         (ddr_dq[8*gen_chip+:8]),
-            .dqs                        (ddr_dqs[gen_chip]),
-            .dqs_n                      (ddr_dqs_n[gen_chip]),
-            .dm_rdqs                    (ddr_dm_rdqs[gen_chip]),
-            .rdqs_n                     (ddr_rdqs_n[gen_chip])
+            .dq                         (dq[8*gen_chip+:8]),
+            .dqs                        (dqs[gen_chip]),
+            .dqs_n                      (dqs_n[gen_chip]),
+            .dm_rdqs                    (dm_rdqs[gen_chip]),
+            .rdqs_n                     (rdqs_n[gen_chip])
         );
     end
 

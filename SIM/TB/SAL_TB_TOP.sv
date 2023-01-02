@@ -1,6 +1,6 @@
-module SAL_TB_TOP;
+`include "SAL_DDR2_PARAMS.svh"
 
-    parameter real              CLK_PERIOD  = 2.5;
+module SAL_TB_TOP;
 
     logic                       clk;
     logic                       rst_n;
@@ -9,7 +9,7 @@ module SAL_TB_TOP;
     initial begin
         clk                         = 1'b0;
         forever
-            #(CLK_PERIOD/2) clk         = ~clk;
+            #(`CLK_PERIOD/2) clk         = ~clk;
     end
 
     // reset generation
@@ -22,9 +22,9 @@ module SAL_TB_TOP;
     end
 
     APB_INTF                        apb_intf (.*);
-    AXI_AR_INTF                     axi_ar_intf(.*);
+    AXI_A_INTF                      axi_ar_intf(.*);
     AXI_R_INTF                      axi_r_intf(.*);
-    AXI_AW_INTF                     axi_aw_intf(.*);
+    AXI_A_INTF                      axi_aw_intf(.*);
     AXI_W_INTF                      axi_w_intf(.*);
     AXI_B_INTF                      axi_b_intf(.*);
 
@@ -35,12 +35,12 @@ module SAL_TB_TOP;
     wire                            ddr_ck;
     wire                            ddr_ck_n;
     wire                            ddr_cke;
-    wire    [1:0]                   ddr_cs_n;
+    wire    [`DRAM_CS_WIDTH-1:0]    ddr_cs_n;
     wire                            ddr_ras_n;
     wire                            ddr_cas_n;
     wire                            ddr_we_n;
-    wire    [1:0]                   ddr_ba;
-    wire    [14:0]                  ddr_addr;
+    wire    [`DRAM_BA_WIDTH-1:0]    ddr_ba;
+    wire    [`DRAM_ADDR_WIDTH-1:0]  ddr_addr;
     wire                            ddr_odt;
 
     wire    [63:0]                  ddr_dq;
@@ -72,7 +72,7 @@ module SAL_TB_TOP;
 
     DDRPHY
     #(
-        .CLK_PERIOD                 (CLK_PERIOD)
+        .CLK_PERIOD                 (`CLK_PERIOD)
     )
     u_ddrphy
     (
@@ -118,11 +118,11 @@ module SAL_TB_TOP;
         .odt                        (ddr_odt),
 
         // data
-        .dq                         (ddr_dq[8*gen_chip+:8]),
-        .dqs                        (ddr_dqs[gen_chip]),
-        .dqs_n                      (ddr_dqs_n[gen_chip]),
-        .dm_rdqs                    (ddr_dm_rdqs[gen_chip]),
-        .rdqs_n                     (ddr_rdqs_n[gen_chip])
+        .dq                         (ddr_dq),
+        .dqs                        (ddr_dqs),
+        .dqs_n                      (ddr_dqs_n),
+        .dm_rdqs                    (ddr_dm_rdqs),
+        .rdqs_n                     (ddr_rdqs_n)
     );
 
     ddr2_dimm                       u_rank1
@@ -140,11 +140,11 @@ module SAL_TB_TOP;
         .odt                        (ddr_odt),
 
         // data
-        .dq                         (ddr_dq[8*gen_chip+:8]),
-        .dqs                        (ddr_dqs[gen_chip]),
-        .dqs_n                      (ddr_dqs_n[gen_chip]),
-        .dm_rdqs                    (ddr_dm_rdqs[gen_chip]),
-        .rdqs_n                     (ddr_rdqs_n[gen_chip])
+        .dq                         (ddr_dq),
+        .dqs                        (ddr_dqs),
+        .dqs_n                      (ddr_dqs_n),
+        .dm_rdqs                    (ddr_dm_rdqs),
+        .rdqs_n                     (ddr_rdqs_n)
     );
 
 

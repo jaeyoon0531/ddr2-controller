@@ -29,6 +29,9 @@
 
                                           // SYMBOL UNITS DESCRIPTION
                                           // ------ ----- -----------
+`define x8
+`define x512Mb
+
 `ifdef x256Mb
 
     `ifdef sg187E
