@@ -17,7 +17,7 @@ module SAL_TB_TOP;
     initial begin
         // activate the reset (active low)            
         rst_n                       = 1'b0;
-        repeat (10) @(posedge clk);
+        repeat (3) @(posedge clk);
         // release the reset after 10 cycles
         rst_n                       = 1'b1;
     end
@@ -71,11 +71,7 @@ module SAL_TB_TOP;
         .dfi_rd_if                  (dfi_rd_if)
     );
 
-    DDRPHY
-    #(
-        .CLK_PERIOD                 (`CLK_PERIOD)
-    )
-    u_ddrphy
+    DDRPHY                          u_ddrphy
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
@@ -154,9 +150,10 @@ module SAL_TB_TOP;
         axi_ar_if.init();
 
         @(posedge rst_n);       // wait for a reset release
-        repeat (5) @(posedge clk);
+        repeat (3) @(posedge clk);
 
         axi_ar_if.transfer('d0, 'd0, 'd0, 'd0, 'd0);
+        axi_ar_if.transfer('d0, 'd4, 'd0, 'd0, 'd0);
 
         repeat (100) @(posedge clk);
         $finish;

@@ -15,6 +15,15 @@ interface DFI_CTRL_IF
     logic   [`DFI_ADDR_WIDTH-1:0]   addr;
     logic                       odt;
 
+    // synthesizable, for design
+    modport                     SRC (
+        output                      cke, cs_n, ras_n, cas_n, we_n, ba, addr, odt
+    );
+
+    modport                     DST (
+        input                       cke, cs_n, ras_n, cas_n, we_n, ba, addr, odt
+    );
+
 endinterface
 
 interface DFI_WR_IF
@@ -25,6 +34,15 @@ interface DFI_WR_IF
     logic                       wrdata_en;
     logic   [63:0]              wrdata;
     logic   [7:0]               wrdata_mask;
+
+    // synthesizable, for design
+    modport                     SRC (
+        output                      wrdata_en, wrdata, wrdata_mask
+    );
+
+    modport                     DST (
+        input                       wrdata_en, wrdata, wrdata_mask
+    );
 endinterface
 
 interface DFI_RD_IF
@@ -32,6 +50,12 @@ interface DFI_RD_IF
     input                       clk,
     input                       rst_n
 );
+    // synthesizable, for design
+    modport                     SRC (
+    );
+
+    modport                     DST (
+    );
 endinterface
 
 interface BK_REQ_IF

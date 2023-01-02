@@ -1,9 +1,6 @@
 `include "TIME_SCALE.svh"
 
 module DDRPHY
-#(
-    parameter real                  CLK_PERIOD  = 2.5
-)
 (
     input   wire                    clk,
     input   wire                    rst_n,

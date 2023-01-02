@@ -1,8 +1,6 @@
 `include "TIME_SCALE.svh"
 `include "SAL_DDR2_PARAMS.svh"
 
-// DONE: merge AW and AR interfaces
-
 interface AXI_A_IF
 #(
     parameter   ADDR_WIDTH      = `AXI_ADDR_WIDTH,      // 32
@@ -23,23 +21,13 @@ interface AXI_A_IF
 
     // synthesizable, for design
     modport                     SRC (
-        output                      avalid,
-        output                      aid,
-        output                      aaddr,
-        output                      alen,
-        output                      asize,
-        output                      aburst,
+        output                      avalid, aid, aaddr, alen, asize, aburst,
         input                       aready
     );
 
     modport                     DST (
-        output                      avalid,
-        output                      aid,
-        output                      aaddr,
-        output                      alen,
-        output                      asize,
-        output                      aburst,
-        input                       aready
+        input                       avalid, aid, aaddr, alen, asize, aburst,
+        output                      aready
     );
 
     // for verification only
@@ -47,39 +35,21 @@ interface AXI_A_IF
     clocking SRC_CB @(posedge clk);
         default input #0.1 output #0.1; // sample -0.1ns before posedge
                                         // drive 0.1ns after posedge
-
-        output                      avalid;
-        output                      aid;
-        output                      aaddr;
-        output                      alen;
-        output                      asize;
-        output                      aburst;
+        output                      avalid, aid, aaddr, alen, asize, aburst;
         input                       aready;
     endclocking
 
     clocking DST_CB @(posedge clk);
         default input #0.1 output #0.1; // sample -0.1ns before posedge
                                         // drive 0.1ns after posedge
-
-        input                       avalid;
-        input                       aid;
-        input                       aaddr;
-        input                       alen;
-        input                       asize;
-        input                       aburst;
+        input                       avalid, aid, aaddr, alen, asize, aburst;
         output                      aready;
     endclocking
 
     clocking MON_CB @(posedge clk);
         default input #0.1 output #0.1; // sample -0.1ns before posedge
                                         // drive 0.1ns after posedge
-
-        input                       avalid;
-        input                       aid;
-        input                       aaddr;
-        input                       alen;
-        input                       asize;
-        input                       aburst;
+        input                       avalid, aid, aaddr, alen, asize, aburst;
         input                       aready;
     endclocking
 
@@ -106,8 +76,8 @@ interface AXI_A_IF
         SRC_CB.alen                 <= len;
         SRC_CB.asize                <= size;
         SRC_CB.aburst               <= burst;
-        while (SRC_CB.aready!=1'b1) begin
-            $display("A", $time, SRC_CB.aready);
+        @(posedge clk);
+        while (aready!=1'b1) begin
             @(posedge clk);
         end
         SRC_CB.avalid               <= 1'b0;
@@ -138,20 +108,12 @@ interface AXI_W_IF
 
     // synthesizable, for design
     modport                     SRC (
-        output                      wvalid,
-        output                      wid,
-        output                      wdata,
-        output                      wstrb,
-        output                      wlast,
+        output                      wvalid, wid, wdata, wstrb, wlast,
         input                       wready
     );
 
     modport                     DST (
-        input                       wvalid,
-        input                       wid,
-        input                       wdata,
-        input                       wstrb,
-        input                       wlast,
+        input                       wvalid, wid, wdata, wstrb, wlast,
         output                      wready
     );
 
@@ -160,36 +122,21 @@ interface AXI_W_IF
     clocking SRC_CB @(posedge clk);
         default input #0.1 output #0.1; // sample -0.1ns before posedge
                                         // drive 0.1ns after posedge
-
-        output                      wvalid;
-        output                      wid;
-        output                      wdata;
-        output                      wstrb;
-        output                      wlast;
+        output                      wvalid, wid, wdata, wstrb, wlast;
         input                       wready;
     endclocking
 
     clocking DST_CB @(posedge clk);
         default input #0.1 output #0.1; // sample -0.1ns before posedge
                                         // drive 0.1ns after posedge
-
-        input                       wvalid;
-        input                       wid;
-        input                       wdata;
-        input                       wstrb;
-        input                       wlast;
+        input                       wvalid, wid, wdata, wstrb, wlast;
         output                      wready;
     endclocking
 
     clocking MON_CB @(posedge clk);
         default input #0.1 output #0.1; // sample -0.1ns before posedge
                                         // drive 0.1ns after posedge
-
-        input                       wvalid;
-        input                       wid;
-        input                       wdata;
-        input                       wstrb;
-        input                       wlast;
+        input                       wvalid, wid, wdata, wstrb, wlast;
         input                       wready;
     endclocking
 
@@ -203,6 +150,26 @@ interface AXI_W_IF
         wstrb                       = 'hx;
         wlast                       = 'hx;
     endfunction
+
+    task transfer(  input   [ID_WIDTH-1:0]      id,
+                    input   [DATA_WIDTH-1:0]    data,
+                    input   [DATA_WIDTH/8-1:0]  strb,
+                    input                       last);
+        SRC_CB.wvalid               <= 1'b1;
+        SRC_CB.wid                  <= id;
+        SRC_CB.wdata                <= data;
+        SRC_CB.wstrb                <= strb;
+        SRC_CB.wlast                <= last;
+        @(posedge clk);
+        while (wready!=1'b1) begin
+            @(posedge clk);
+        end
+        SRC_CB.wvalid               <= 1'b0;
+        SRC_CB.wid                  <= 'hx;
+        SRC_CB.wdata                <= 'hx;
+        SRC_CB.wstrb                <= 'hx;
+        SRC_CB.wlast                <= 'hx;
+    endtask
     // synthesis translate_on
 endinterface
 
@@ -221,19 +188,61 @@ interface AXI_B_IF
 
     // synthesizable, for design
     modport                     SRC (
-        output                      bvalid,
-        output                      bid,
-        output                      bresp,
+        output                      bvalid, bid, bresp,
         input                       bready
     );
 
     modport                     DST (
-        input                       bvalid,
-        input                       bid,
-        input                       bresp,
+        input                       bvalid, bid, bresp,
         output                      bready
     );
 
+    // for verification only
+    // synthesis translate_off
+    clocking SRC_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+        output                      bvalid, bid, bresp;
+        input                       bready;
+    endclocking
+
+    clocking DST_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+        input                       bvalid, bid, bresp;
+        output                      bready;
+    endclocking
+
+    clocking MON_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+        input                       bvalid, bid, bresp;
+        input                       bready;
+    endclocking
+
+    modport SRC_TB (clocking SRC_CB, input clk, rst_n);
+    modport DST_TB (clocking DST_CB, input clk, rst_n);
+
+    function void init();   // does not consume timing
+        bvalid                      = 1'b0;
+        bid                         = 'hx;
+        bresp                       = 'hx;
+    endfunction
+
+    task transfer(  input   [ID_WIDTH-1:0]      id,
+                    input   [1:0]               resp);
+        SRC_CB.bvalid               <= 1'b1;
+        SRC_CB.bid                  <= id;
+        SRC_CB.bresp                <= resp;
+        @(posedge clk);
+        while (bready!=1'b1) begin
+            @(posedge clk);
+        end
+        SRC_CB.bvalid               <= 1'b0;
+        SRC_CB.bid                  <= 'hx;
+        SRC_CB.bresp                <= 'hx;
+    endtask
+    // synthesis translate_on
 endinterface
 
 
@@ -256,69 +265,68 @@ interface AXI_R_IF
 
     // synthesizable, for design
     modport                     SRC (
-        output                      rvalid,
-        output                      rid,
-        output                      rdata,
-        output                      rresp,
-        output                      rlast,
+        output                      rvalid, rid, rdata, rresp, rlast,
         input                       rready
     );
 
     modport                     DST (
-        input                       rvalid,
-        input                       rid,
-        input                       rdata,
-        input                       rresp,
-        input                       rlast,
+        input                       rvalid, rid, rdata, rresp, rlast,
         output                      rready
     );
 
     // For verification
     // synthesis translate_off
-    clocking driver_cb_mc_r @(posedge clk);
-    //default input #1 output #1;
-
-        // on chip - r
-        input               rready;
-        // dram - r
-        output              rid;
-        output              rdata;
-        output              rresp;
-        output              rlast;
-        output              rvalid;
+    clocking SRC_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+        output                      rvalid, rid, rdata, rresp, rlast;
+        input                       rready;
     endclocking
 
-    clocking driver_cb_icnt_r @(posedge clk);
-    //    default input #1 output #1;
-
-        // on chip - r
-        output          rready;
-        // dram - r
-        input           rid;
-        input           rdata;
-        input           rresp;
-        input           rlast;
-        input           rvalid;
+    clocking DST_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+        input                       rvalid, rid, rdata, rresp, rlast;
+        output                      rready;
     endclocking
 
-    clocking monitor_cb_icnt_r @(posedge clk);
-        //default input #1 output #1;
-
-        // on chip - r
-        input           rid;
-        input           rresp;
-        input           rdata;
-        input           rlast;
-        input           rvalid;
-        // dram - r
-        input           rready;
+    clocking MON_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+        input                       rvalid, rid, rdata, rresp, rlast;
+        input                       rready;
     endclocking
 
-    modport DRIVER_MC_R (clocking driver_cb_mc_r, input clk, rst_n);
-    modport DRIVER_ICNT_R (clocking driver_cb_icnt_r, input clk, rst_n);
+    modport SRC_TB (clocking SRC_CB, input clk, rst_n);
+    modport DST_TB (clocking DST_CB, input clk, rst_n);
 
-    //  modport MONITOR_MC_R (clocking monitor_cb_mc_r, input clk, rst_n);
-    modport MONITOR_ICNT_R (clocking monitor_cb_icnt_r, input clk, rst_n);
+    function void init();   // does not consume timing
+        rvalid                      = 1'b0;
+        rid                         = 'hx;
+        rdata                       = 'hx;
+        rresp                       = 'hx;
+        rlast                       = 'hx;
+    endfunction
+
+    task transfer(  input   [ID_WIDTH-1:0]      id,
+                    input   [DATA_WIDTH-1:0]    data,
+                    input   [1:0]               resp,
+                    input                       last);
+        SRC_CB.rvalid               <= 1'b1;
+        SRC_CB.rid                  <= id;
+        SRC_CB.rdata                <= data;
+        SRC_CB.rresp                <= resp;
+        SRC_CB.rlast                <= last;
+        @(posedge clk);
+        while (rready!=1'b1) begin
+            @(posedge clk);
+        end
+        SRC_CB.rvalid               <= 1'b0;
+        SRC_CB.rid                  <= 'hx;
+        SRC_CB.rdata                <= 'hx;
+        SRC_CB.rresp                <= 'hx;
+        SRC_CB.rlast                <= 'hx;
+    endtask
     // synthesis translate_on
 endinterface
 
@@ -335,68 +343,98 @@ interface APB_IF (
     logic   [31:0]              prdata;
     logic                       pslverr;
 
-    modport master (
-        input           clk,
-        input           pready, prdata, pslverr,
-        output          psel, penable, paddr, pwrite, pwdata
+    // synthesizable, for design
+    modport SRC (
+        output                  psel, penable, paddr, pwrite, pwdata,
+        input                   pready, prdata, pslverr
     );
 
+    modport DST (
+        input                   psel, penable, paddr, pwrite, pwdata,
+        output                  pready, prdata, pslverr
+    );
+
+    // for verification only
     // synthesis translate_off
+    clocking SRC_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+        output                      psel, penable, paddr, pwrite, pwdata;
+        input                       pready, prdata, pslverr;
+    endclocking
+
+    clocking DST_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+        input                       psel, penable, paddr, pwrite, pwdata;
+        output                      pready, prdata, pslverr;
+    endclocking
+
+    clocking MON_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+        input                       psel, penable, paddr, pwrite, pwdata;
+        input                       pready, prdata, pslverr;
+    endclocking
+
+    modport SRC_TB (clocking SRC_CB, input clk, rst_n);
+    modport DST_TB (clocking DST_CB, input clk, rst_n);
+
     task init();
-        psel                    = 1'b0;
-        penable                 = 1'b0;
-        paddr                   = 32'd0;
-        pwrite                  = 1'b0;
-        pwdata                  = 32'd0;
+        psel                        = 1'b0;
+        penable                     = 'hx;
+        paddr                       = 'hx;
+        pwrite                      = 'hx;
+        pwdata                      = 'hx;
     endtask
 
-    task write(input int addr,
-               input int data);
-        #1
-        psel                    = 1'b1;
-        penable                 = 1'b0;
-        paddr                   = addr;
-        pwrite                  = 1'b1;
-        pwdata                  = data;
+    task write(input    [31:0]  addr,
+               input    [31:0]  data);
+        SRC_CB.psel                 <= 1'b1;
+        SRC_CB.penable              <= 1'b0;
+        SRC_CB.paddr                <= addr;
+        SRC_CB.pwrite               <= 1'b1;
+        SRC_CB.pwdata               <= data;
         @(posedge clk);
-        #1
-        penable                 = 1'b1;
+        SRC_CB.penable              <= 1'b1;
+        @(posedge clk);
+
+        while (pready!=1'b1) begin
+            @(posedge clk);
+        end
+
+        SRC_CB.psel                 <= 1'b0;
+        SRC_CB.penable              <= 'hx;
+        SRC_CB.paddr                <= 'hx;
+        SRC_CB.pwrite               <= 'hx;
+        SRC_CB.pwdata               <= 'hx;
+    endtask
+
+    task read(input     [31:0]  addr,
+              output    [31:0]  data);
+        SRC_CB.psel                 <= 1'b1;
+        SRC_CB.penable              <= 1'b0;
+        SRC_CB.paddr                <= addr;
+        SRC_CB.pwrite               <= 1'b0;
+        SRC_CB.pwdata               <= 'hx;
+        @(posedge clk);
+        SRC_CB.penable              <= 1'b1;
         @(posedge clk);
 
         while (pready==1'b0) begin
             @(posedge clk);
         end
-
-        psel                    = 1'b0;
-        penable                 = 1'b0;
-        paddr                   = 'hX;
-        pwrite                  = 1'bx;
-        pwdata                  = 'hX;
-    endtask
-
-    task read(input int addr,
-              output int data);
-        #1
-        psel                    = 1'b1;
-        penable                 = 1'b0;
-        paddr                   = addr;
-        pwrite                  = 1'b0;
-        pwdata                  = 'hX;
-        @(posedge clk);
-        #1
-        penable                 = 1'b1;
-        @(posedge clk);
-
-        while (pready==1'b0) begin
+        while (pready!=1'b1) begin
             @(posedge clk);
         end
-        data                    = prdata;
 
-        psel                    = 1'b0;
-        penable                 = 1'b0;
-        paddr                   = 'hX;
-        pwrite                  = 1'bx;
-        pwdata                  = 'hX;
+        SRC_CB.psel                 <= 1'b0;
+        SRC_CB.penable              <= 'hx;
+        SRC_CB.paddr                <= 'hx;
+        SRC_CB.pwrite               <= 'hx;
+        SRC_CB.pwdata               <= 'hx;
+
+        data                        = prdata;
     endtask
     // synthesis translate_on
 
