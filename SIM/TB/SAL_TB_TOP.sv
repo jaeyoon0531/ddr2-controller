@@ -22,16 +22,16 @@ module SAL_TB_TOP;
         rst_n                       = 1'b1;
     end
 
-    APB_IF                          apb_if      (.*);
-    AXI_A_IF                        axi_ar_if   (.*);
-    AXI_R_IF                        axi_r_if    (.*);
-    AXI_A_IF                        axi_aw_if   (.*);
-    AXI_W_IF                        axi_w_if    (.*);
-    AXI_B_IF                        axi_b_if    (.*);
+    APB_IF                          apb_if      (.clk(clk), .rst_n(rst_n));
+    AXI_A_IF                        axi_ar_if   (.clk(clk), .rst_n(rst_n));
+    AXI_R_IF                        axi_r_if    (.clk(clk), .rst_n(rst_n));
+    AXI_A_IF                        axi_aw_if   (.clk(clk), .rst_n(rst_n));
+    AXI_W_IF                        axi_w_if    (.clk(clk), .rst_n(rst_n));
+    AXI_B_IF                        axi_b_if    (.clk(clk), .rst_n(rst_n));
 
-    DFI_CTRL_IF                     dfi_ctrl_if (.*);
-    DFI_WR_IF                       dfi_wr_if   (.*);
-    DFI_RD_IF                       dfi_rd_if   (.*);
+    DFI_CTRL_IF                     dfi_ctrl_if (.clk(clk), .rst_n(rst_n));
+    DFI_WR_IF                       dfi_wr_if   (.clk(clk), .rst_n(rst_n));
+    DFI_RD_IF                       dfi_rd_if   (.clk(clk), .rst_n(rst_n));
 
     wire                            ddr_ck;
     wire                            ddr_ck_n;
