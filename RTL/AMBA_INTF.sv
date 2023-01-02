@@ -2,7 +2,7 @@
 
 // DONE: merge AW and AR interfaces 
 
-interface AXI_A_INTF
+interface AXI_A_IF
 #(
     parameter   ADDR_WIDTH      = `AXI_ADDR_WIDTH,      // 32
     parameter   ID_WIDTH        = `AXI_ID_WIDTH,        // 4
@@ -166,7 +166,7 @@ endclocking
 
 endinterface
 
-interface AXI_W_INTF
+interface AXI_W_IF
 #(
     parameter   DATA_WIDTH      = `AXI_DATA_WIDTH,
     parameter   ID_WIDTH        = `AXI_ID_WIDTH
@@ -243,7 +243,7 @@ endclocking
 
 endinterface
 
-interface AXI_B_INTF
+interface AXI_B_IF
 #(
     parameter   ID_WIDTH        = `AXI_ID_WIDTH
  )
@@ -260,7 +260,7 @@ endinterface
 
 
 
-interface AXI_R_INTF
+interface AXI_R_IF
 #(
     parameter   DATA_WIDTH      = `AXI_DATA_WIDTH,
     parameter   ID_WIDTH        = `AXI_ID_WIDTH
@@ -325,7 +325,7 @@ interface AXI_R_INTF
     // synthesis translate_on
 endinterface
 
-interface APB_INTF (
+interface APB_IF (
     input                       clk,
     input                       rst_n
 );

@@ -9,11 +9,11 @@ module SAL_BK_CTRL
     input                       rst_n,
 
     // request from the address decoder
-    BK_REQ_INTF                 bk_req_intf,
+    BK_REQ_IF                   bk_req_if,
     // timing parameters
-    BK_TIMING_INTF              bk_timing_intf,
+    BK_TIMING_IF                bk_timing_if,
     // request to the scheduler
-    BK_SCHED_INTF               bk_sched_intf,
+    BK_SCHED_IF                 bk_sched_if,
 
     // per-bank auto-refresh requests
     input   wire                pb_ref_req_i,
@@ -50,57 +50,57 @@ module SAL_BK_CTRL
         state_n                     = state;
 
         pb_ref_gnt_o                = 1'b0;
-        bk_req_intf.ready           = 1'b0;
+        bk_req_if.ready             = 1'b0;
 
-        bk_sched_intf.ra            = bk_req_intf.ra;
-        bk_sched_intf.ca            = bk_req_intf.ca;
+        bk_sched_if.ra              = bk_req_if.ra;
+        bk_sched_if.ca              = bk_req_if.ca;
 
-        bk_sched_intf.act_req       = 1'b0;
-        bk_sched_intf.rd_req        = 1'b0;
-        bk_sched_intf.wr_req        = 1'b0;
-        bk_sched_intf.pre_req       = 1'b0;
-        bk_sched_intf.ref_req       = 1'b0;
+        bk_sched_if.act_req         = 1'b0;
+        bk_sched_if.rd_req          = 1'b0;
+        bk_sched_if.wr_req          = 1'b0;
+        bk_sched_if.pre_req         = 1'b0;
+        bk_sched_if.ref_req         = 1'b0;
 
         case (state)
             S_CLOSED: begin     // the bank is closed
                 if (is_t_rp_met & is_t_rfc_met) begin
                     if (pb_ref_req_i) begin
-                        bk_sched_intf.ref_req       = 1'b1;
-                        if (bk_sched_intf.ref_gnt) begin
+                        bk_sched_if.ref_req       = 1'b1;
+                        if (bk_sched_if.ref_gnt) begin
                             pb_ref_gnt_o                = 1'b1;
                         end
                     end
-                    else if (bk_req_intf.valid) begin    // a new request comes
+                    else if (bk_req_if.valid) begin    // a new request comes
                     // we need to activate a new row
-                        bk_sched_intf.act_req       = 1'b1;
-                        if (bk_sched_intf.act_gnt) begin
-                            cur_ra_n                    = bk_req_intf.ra;
+                        bk_sched_if.act_req       = 1'b1;
+                        if (bk_sched_if.act_gnt) begin
+                            cur_ra_n                    = bk_req_if.ra;
                             state_n                     = S_OPEN;
                         end
                     end
                 end
             end
             S_OPEN: begin
-                if (bk_req_intf.valid) begin
-                    if (cur_ra == bk_req_intf.ra) begin // bank hit
+                if (bk_req_if.valid) begin
+                    if (cur_ra == bk_req_if.ra) begin // bank hit
                         if (is_t_rcd_met) begin
-                            bk_sched_intf.rd_req        = !bk_req_intf.wr;
-                            bk_sched_intf.wr_req        = bk_req_intf.wr;
+                            bk_sched_if.rd_req          = !bk_req_if.wr;
+                            bk_sched_if.wr_req          = bk_req_if.wr;
                         end
 
-                        if (bk_sched_intf.rd_gnt) begin
-                            bk_req_intf.ready           = 1'b1;
+                        if (bk_sched_if.rd_gnt) begin
+                            bk_req_if.ready             = 1'b1;
                         end
-                        if (bk_sched_intf.wr_gnt) begin
-                            bk_req_intf.ready           = 1'b1;
+                        if (bk_sched_if.wr_gnt) begin
+                            bk_req_if.ready             = 1'b1;
                         end
                     end
                     else begin  // bank miss
                         if (is_t_ras_met & is_t_rtp_met & is_t_wtp_met) begin
-                            bk_sched_intf.pre_req       = 1'b1;
+                            bk_sched_if.pre_req         = 1'b1;
                         end
 
-                        if (bk_sched_intf.pre_gnt) begin
+                        if (bk_sched_if.pre_gnt) begin
                             state_n                     = S_CLOSED;
                         end
                     end
@@ -114,8 +114,8 @@ module SAL_BK_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .reset_cmd_i                (bk_sched_intf.act_gnt),
-        .reset_value_i              (bk_timing_intf.t_rcd),
+        .reset_cmd_i                (bk_sched_if.act_gnt),
+        .reset_value_i              (bk_timing_if.t_rcd),
         .is_zero_o                  (is_t_rcd_met)
     );
 
@@ -124,8 +124,8 @@ module SAL_BK_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .reset_cmd_i                (bk_sched_intf.pre_gnt),
-        .reset_value_i              (bk_timing_intf.t_rp),
+        .reset_cmd_i                (bk_sched_if.pre_gnt),
+        .reset_value_i              (bk_timing_if.t_rp),
         .is_zero_o                  (is_t_rp_met)
     );
 
@@ -134,8 +134,8 @@ module SAL_BK_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .reset_cmd_i                (bk_sched_intf.act_gnt),
-        .reset_value_i              (bk_timing_intf.t_ras),
+        .reset_cmd_i                (bk_sched_if.act_gnt),
+        .reset_value_i              (bk_timing_if.t_ras),
         .is_zero_o                  (is_t_ras_met)
     );
 
@@ -144,8 +144,8 @@ module SAL_BK_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .reset_cmd_i                (bk_sched_intf.ref_gnt),
-        .reset_value_i              (bk_timing_intf.t_rfc),
+        .reset_cmd_i                (bk_sched_if.ref_gnt),
+        .reset_value_i              (bk_timing_if.t_rfc),
         .is_zero_o                  (is_t_rfc_met)
     );
 
@@ -154,8 +154,8 @@ module SAL_BK_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .reset_cmd_i                (bk_sched_intf.rd_gnt),
-        .reset_value_i              (bk_timing_intf.t_rtp),
+        .reset_cmd_i                (bk_sched_if.rd_gnt),
+        .reset_value_i              (bk_timing_if.t_rtp),
         .is_zero_o                  (is_t_rtp_met)
     );
 
@@ -164,8 +164,8 @@ module SAL_BK_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .reset_cmd_i                (bk_sched_intf.wr_gnt),
-        .reset_value_i              (bk_timing_intf.t_wtp),
+        .reset_cmd_i                (bk_sched_if.wr_gnt),
+        .reset_value_i              (bk_timing_if.t_wtp),
         .is_zero_o                  (is_t_wtp_met)
     );
 

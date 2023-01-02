@@ -1,6 +1,6 @@
 `include "SAL_DDR2_PARAMS.svh"
 
-interface DFI_CTRL_INTF
+interface DFI_CTRL_IF
 (
     input                       clk,
     input                       rst_n
@@ -16,7 +16,7 @@ interface DFI_CTRL_INTF
 
 endinterface
 
-interface DFI_WR_INTF
+interface DFI_WR_IF
 (
     input                       clk,
     input                       rst_n
@@ -26,14 +26,14 @@ interface DFI_WR_INTF
     logic   [7:0]               wrdata_mask;
 endinterface
 
-interface DFI_RD_INTF
+interface DFI_RD_IF
 (
     input                       clk,
     input                       rst_n
 );
 endinterface
 
-interface BK_REQ_INTF
+interface BK_REQ_IF
 (
     input                       clk,
     input                       rst_n
@@ -48,7 +48,7 @@ interface BK_REQ_INTF
 
 endinterface
 
-interface BK_TIMING_INTF ();
+interface BK_TIMING_IF ();
     logic   [`T_RCD_WIDTH-1:0]  t_rcd;
     logic   [`T_RP_WIDTH-1:0]   t_rp;
     logic   [`T_RAS_WIDTH-1:0]  t_ras;
@@ -58,7 +58,7 @@ interface BK_TIMING_INTF ();
 
 endinterface
 
-interface SCHED_TIMING_INTF ();
+interface SCHED_TIMING_IF ();
     logic   [`T_RRD_WIDTH-1:0]  t_rrd;
     logic   [`T_CCD_WIDTH-1:0]  t_ccd;
     logic   [`T_WTR_WIDTH-1:0]  t_wtr;
@@ -66,7 +66,7 @@ interface SCHED_TIMING_INTF ();
 
 endinterface
 
-interface BK_SCHED_INTF
+interface BK_SCHED_IF
 (
     input                       clk,
     input                       rst_n

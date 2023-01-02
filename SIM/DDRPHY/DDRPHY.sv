@@ -7,9 +7,9 @@ module DDRPHY
     input   wire                    rst_n,
 
     // DFI interface (interface with the controller)
-    DFI_CTRL_INTF                   dfi_ctrl_intf,
-    DFI_WR_INTF                     dfi_wr_intf,
-    DFI_RD_INTF                     dfi_rd_intf,
+    DFI_CTRL_IF                     dfi_ctrl_if,
+    DFI_WR_IF                       dfi_wr_if,
+    DFI_RD_IF                       dfi_rd_if,
 
     // command and address
     output  logic                   ck,
@@ -35,14 +35,15 @@ module DDRPHY
     assign  ck_n                    = ~clk;
     
     // delay control signals by a half cycle to align the signals
-    always_ff @(negedge clk) begin
-        cke                         <= dfi_ctrl_intf.cke;
-        cs_n                        <= dfi_ctrl_intf.cs_n;
-        ras_n                       <= dfi_ctrl_intf.ras_n;
-        cas_n                       <= dfi_ctrl_intf.cas_n;
-        we_n                        <= dfi_ctrl_intf.we_n;
-        ba                          <= dfi_ctrl_intf.ba;
-        addr                        <= dfi_ctrl_intf.addr;
-        odt                         <= dfi_ctrl_intf.odt;
+    always_ff @(negedge clk) begin  // NEGedge
+        cke                         <= dfi_ctrl_if.cke;
+        cs_n                        <= dfi_ctrl_if.cs_n;
+        ras_n                       <= dfi_ctrl_if.ras_n;
+        cas_n                       <= dfi_ctrl_if.cas_n;
+        we_n                        <= dfi_ctrl_if.we_n;
+        ba                          <= dfi_ctrl_if.ba;
+        addr                        <= dfi_ctrl_if.addr;
+        odt                         <= dfi_ctrl_if.odt;
     end
+
 endmodule

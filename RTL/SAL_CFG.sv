@@ -9,23 +9,23 @@ module SAL_CFG
     input                       rst_n,
 
     // APB interface
-    APB_INTF                    apb_intf,
+    APB_IF                      apb_if,
 
     // timing parameters
-    BK_TIMING_INTF              bk_timing_intf,
-    SCHED_TIMING_INTF           sched_timing_intf
+    BK_TIMING_IF                bk_timing_if,
+    SCHED_TIMING_IF             sched_timing_if
 );
 
-    assign  bk_timing_intf.t_rcd    = `T_RCD_VALUE;
-    assign  bk_timing_intf.t_rp     = `T_RP_VALUE;
-    assign  bk_timing_intf.t_ras    = `T_RAS_VALUE;
-    assign  bk_timing_intf.t_rfc    = `T_RFC_VALUE;
-    assign  bk_timing_intf.t_rtp    = `T_RTP_VALUE;
-    assign  bk_timing_intf.t_wtp    = `T_WTP_VALUE;
+    assign  bk_timing_if.t_rcd      = `T_RCD_VALUE;
+    assign  bk_timing_if.t_rp       = `T_RP_VALUE;
+    assign  bk_timing_if.t_ras      = `T_RAS_VALUE;
+    assign  bk_timing_if.t_rfc      = `T_RFC_VALUE;
+    assign  bk_timing_if.t_rtp      = `T_RTP_VALUE;
+    assign  bk_timing_if.t_wtp      = `T_WTP_VALUE;
 
-    assign  sched_timing_intf.t_rrd = `T_RRD_VALUE;
-    assign  sched_timing_intf.t_ccd = `T_CCD_VALUE;
-    assign  sched_timing_intf.t_wtr = `T_WTR_VALUE;
-    assign  sched_timing_intf.t_rtw = `T_RTW_VALUE;
+    assign  sched_timing_if.t_rrd   = `T_RRD_VALUE;
+    assign  sched_timing_if.t_ccd   = `T_CCD_VALUE;
+    assign  sched_timing_if.t_wtr   = `T_WTR_VALUE;
+    assign  sched_timing_if.t_rtw   = `T_RTW_VALUE;
 
 endmodule

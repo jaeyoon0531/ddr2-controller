@@ -21,16 +21,16 @@ module SAL_TB_TOP;
         rst_n                       = 1'b1;
     end
 
-    APB_INTF                        apb_intf (.*);
-    AXI_A_INTF                      axi_ar_intf(.*);
-    AXI_R_INTF                      axi_r_intf(.*);
-    AXI_A_INTF                      axi_aw_intf(.*);
-    AXI_W_INTF                      axi_w_intf(.*);
-    AXI_B_INTF                      axi_b_intf(.*);
+    APB_IF                          apb_if      (.*);
+    AXI_A_IF                        axi_ar_if   (.*);
+    AXI_R_IF                        axi_r_if    (.*);
+    AXI_A_IF                        axi_aw_if   (.*);
+    AXI_W_IF                        axi_w_if    (.*);
+    AXI_B_IF                        axi_b_if    (.*);
 
-    DFI_CTRL_INTF                   dfi_ctrl_intf(.*);
-    DFI_WR_INTF                     dfi_wr_intf(.*);
-    DFI_RD_INTF                     dfi_rd_intf(.*);
+    DFI_CTRL_IF                     dfi_ctrl_if (.*);
+    DFI_WR_IF                       dfi_wr_if   (.*);
+    DFI_RD_IF                       dfi_rd_if   (.*);
 
     wire                            ddr_ck;
     wire                            ddr_ck_n;
@@ -55,19 +55,19 @@ module SAL_TB_TOP;
         .rst_n                      (rst_n),
 
         // APB interface
-        .apb_intf                   (apb_intf),
+        .apb_if                     (apb_if),
 
         // AXI interface
-        .axi_ar_intf                (axi_ar_intf),
-        .axi_aw_intf                (axi_aw_intf),
-        .axi_w_intf                 (axi_w_intf),
-        .axi_b_intf                 (axi_b_intf),
-        .axi_r_intf                 (axi_r_intf),
+        .axi_ar_if                  (axi_ar_if),
+        .axi_aw_if                  (axi_aw_if),
+        .axi_w_if                   (axi_w_if),
+        .axi_b_if                   (axi_b_if),
+        .axi_r_if                   (axi_r_if),
 
         // DFI interface
-        .dfi_ctrl_intf              (dfi_ctrl_intf),
-        .dfi_wr_intf                (dfi_wr_intf),
-        .dfi_rd_intf                (dfi_rd_intf)
+        .dfi_ctrl_if                (dfi_ctrl_if),
+        .dfi_wr_if                  (dfi_wr_if),
+        .dfi_rd_if                  (dfi_rd_if)
     );
 
     DDRPHY
@@ -79,9 +79,9 @@ module SAL_TB_TOP;
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .dfi_ctrl_intf              (dfi_ctrl_intf),
-        .dfi_wr_intf                (dfi_wr_intf),
-        .dfi_rd_intf                (dfi_rd_intf),
+        .dfi_ctrl_if                (dfi_ctrl_if),
+        .dfi_wr_if                  (dfi_wr_if),
+        .dfi_rd_if                  (dfi_rd_if),
 
         // command and address
         .ck                         (ddr_ck),
@@ -149,13 +149,13 @@ module SAL_TB_TOP;
 
 
     initial begin
-        axi_aw_intf.reset();
-        axi_ar_intf.reset();
+        axi_aw_if.reset();
+        axi_ar_if.reset();
 
         @(posedge rst_n);       // wait for a reset release
         repeat (5) @(posedge clk);
 
-        axi_ar_intf.transfer('d0, 'd0, 'd0, 'd0, 'd0);
+        axi_ar_if.transfer('d0, 'd0, 'd0, 'd0, 'd0);
 
         repeat (100) @(posedge clk);
         $finish;
