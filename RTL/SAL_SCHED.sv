@@ -8,7 +8,7 @@ module SAL_SCHED
     input                       rst_n,
 
     // requests from banks
-    BK_SCHED_IF                 bk_sched_if[`DRAM_BK_CNT],
+    BK_SCHED_IF.DST             bk_sched_if[`DRAM_BK_CNT],
 
     DFI_CTRL_IF.SRC             dfi_ctrl_if
 );

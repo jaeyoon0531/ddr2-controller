@@ -8,11 +8,11 @@ module SAL_BK_CTRL
     input                       rst_n,
 
     // request from the address decoder
-    BK_REQ_IF                   bk_req_if,
+    BK_REQ_IF.DST               bk_req_if,
     // timing parameters
-    BK_TIMING_IF                bk_timing_if,
+    BK_TIMING_IF.DST            bk_timing_if,
     // request to the scheduler
-    BK_SCHED_IF                 bk_sched_if,
+    BK_SCHED_IF.SRC             bk_sched_if,
 
     // per-bank auto-refresh requests
     input   wire                pb_ref_req_i,

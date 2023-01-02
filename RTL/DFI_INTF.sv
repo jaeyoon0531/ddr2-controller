@@ -71,6 +71,15 @@ interface BK_REQ_IF
     logic   [3:0]               len;
     logic                       wr;
 
+    // synthesizable, for design
+    modport SRC (
+        output                  valid, id, ra, ca, len, wr,
+        input                   ready
+    );
+    modport DST (
+        input                   valid, id, ra, ca, len, wr,
+        output                  ready
+    );
 endinterface
 
 interface BK_TIMING_IF ();
@@ -81,6 +90,13 @@ interface BK_TIMING_IF ();
     logic   [`T_RTP_WIDTH-1:0]  t_rtp;
     logic   [`T_WTP_WIDTH-1:0]  t_wtp;
 
+    // synthesizable, for design
+    modport SRC (
+        output                  t_rcd, t_rp, t_ras, t_rfc, t_rtp, t_wtp
+    );
+    modport DST (
+        input                   t_rcd, t_rp, t_ras, t_rfc, t_rtp, t_wtp
+    );
 endinterface
 
 interface SCHED_TIMING_IF ();
@@ -89,6 +105,13 @@ interface SCHED_TIMING_IF ();
     logic   [`T_WTR_WIDTH-1:0]  t_wtr;
     logic   [`T_RTW_WIDTH-1:0]  t_rtw;
 
+    // synthesizable, for design
+    modport SRC (
+        output                  t_rrd, t_ccd, t_wtr, t_rtw
+    );
+    modport DST (
+        input                   t_rrd, t_ccd, t_wtr, t_rtw
+    );
 endinterface
 
 interface BK_SCHED_IF
@@ -109,5 +132,14 @@ interface BK_SCHED_IF
     logic                       pre_gnt;
     logic                       ref_gnt;
 
+    // synthesizable, for design
+    modport SRC (
+        output                  ra, ca, act_req, rd_req, wr_req, pre_req, ref_req,
+        input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
+    );
+    modport DST (
+        input                   ra, ca, act_req, rd_req, wr_req, pre_req, ref_req,
+        output                  act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
+    );
 endinterface
 

@@ -10,7 +10,7 @@ module SAL_ADDR_DECODER
     // request from the AXI side
     AXI_A_IF.DST                icnt_axi_a_if,
     // request to bank controller
-    BK_REQ_IF                   bk_req_if_arr[`DRAM_BK_CNT]
+    BK_REQ_IF.SRC               bk_req_if_arr[`DRAM_BK_CNT]
 );
 
     // SystemVerilog generate statement for banks

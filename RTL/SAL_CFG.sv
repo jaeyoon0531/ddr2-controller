@@ -11,8 +11,8 @@ module SAL_CFG
     APB_IF                      apb_if,
 
     // timing parameters
-    BK_TIMING_IF                bk_timing_if,
-    SCHED_TIMING_IF             sched_timing_if
+    BK_TIMING_IF.SRC            bk_timing_if,
+    SCHED_TIMING_IF.SRC         sched_timing_if
 );
 
     assign  bk_timing_if.t_rcd      = `T_RCD_VALUE;
