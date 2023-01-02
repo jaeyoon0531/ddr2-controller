@@ -1,4 +1,11 @@
-interface DFI_INTF
+interface DFI_CTRL_INTF
+(
+    input                       clk,
+    input                       rst_n
+);
+endinterface
+
+interface DFI_RD_INTF
 (
     input                       clk,
     input                       rst_n
@@ -41,6 +48,8 @@ interface BK_SCHED_INTF
     input                       clk,
     input                       rst_n
 );
+    logic   [`DRAM_RA_WIDTH-1:0]ra;
+    logic   [`DRAM_CA_WIDTH-1:0]ca;
     logic                       act_req;
     logic                       rd_req;
     logic                       wr_req;

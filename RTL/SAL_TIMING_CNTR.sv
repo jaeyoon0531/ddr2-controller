@@ -32,7 +32,7 @@ module SAL_TIMING_CNTR
         if (reset_cmd_i)
             cntr_n                  = reset_value_i;
         else (cntr != 'd0)
-            cntr_n                  = cntr - 'd0;
+            cntr_n                  = cntr - 'd1;
         else
             cntr_n                  = cntr;
     end
