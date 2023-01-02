@@ -29,7 +29,18 @@ module SAL_DDR2_CTRL
     BK_TIMING_INTF              bk_timing_intf (.*);
     SCHED_TIMING_INTF           sched_timing_intf (.*);
 
-    SAL_ADDR_DECODER            u_decoder
+    SAL_CFG                         u_cfg
+    (
+        .clk                        (clk),
+        .rst_n                      (rst_n),
+
+        .apb_intf                   (apb_intf),
+
+        .bk_timing_intf             (bk_timing_intf),
+        .sched_timing_intf          (sched_timing_intf)
+    );
+
+    SAL_ADDR_DECODER                u_decoder
     (
         .clk                        (clk),
         .rst_n                      (rst_n),

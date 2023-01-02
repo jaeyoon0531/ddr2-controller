@@ -1,0 +1,31 @@
+`timescale 1ns/1ps
+
+`include "SAL_DDR2_PARAMS.svh"
+
+module SAL_CFG
+(
+    // clock & reset
+    input                       clk,
+    input                       rst_n,
+
+    // APB interface
+    APB_INTF                    apb_intf,
+
+    // timing parameters
+    BK_TIMING_INTF              bk_timing_intf,
+    SCHED_TIMING_INTF           sched_timing_intf
+);
+
+    assign  bk_timing_intf.t_rcd    = `T_RCD_VALUE;
+    assign  bk_timing_intf.t_rp     = `T_RP_VALUE;
+    assign  bk_timing_intf.t_ras    = `T_RAS_VALUE;
+    assign  bk_timing_intf.t_rfc    = `T_RFC_VALUE;
+    assign  bk_timing_intf.t_rtp    = `T_RTP_VALUE;
+    assign  bk_timing_intf.t_wtp    = `T_WTP_VALUE;
+
+    assign  sched_timing_intf.t_rrd = `T_RRD_VALUE;
+    assign  sched_timing_intf.t_ccd = `T_CCD_VALUE;
+    assign  sched_timing_intf.t_wtr = `T_WTR_VALUE;
+    assign  sched_timing_intf.t_rtw = `T_RTW_VALUE;
+
+endmodule

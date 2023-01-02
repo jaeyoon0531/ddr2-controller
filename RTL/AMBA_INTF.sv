@@ -38,12 +38,12 @@ interface AXI_A_INTF
                     input   [ADDR_LEN-1:0]      len,
                     input   [2:0]               size,
                     input   [1:0]               burst);
-        avalid                      <= 1'b1;
-        aid                         <= id;
-        aaddr                       <= addr;
-        alen                        <= len;
-        asize                       <= size;
-        aburst                      <= burst;
+        avalid                      = 1'b1;
+        aid                         = id;
+        aaddr                       = addr;
+        alen                        = len;
+        asize                       = size;
+        aburst                      = burst;
         while (aready!=1'b1) begin
             @(posedge clk);
         end

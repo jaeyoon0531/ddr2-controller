@@ -36,7 +36,7 @@ module SAL_BK_CTRL
                                 is_t_wtp_met;
 
     always_ff @(posedge clk)
-        if (rst_n) begin
+        if (~rst_n) begin
             state                   <= S_CLOSED;
             cur_ra                  <= 'h0;
         end

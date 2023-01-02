@@ -42,6 +42,10 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[gen_chip]),
             .rdqs_n                     (rdqs_n[gen_chip])
         );
+
+        initial begin
+            force u_dram.init_done          = 1'b1;
+        end
     end
 
 endmodule

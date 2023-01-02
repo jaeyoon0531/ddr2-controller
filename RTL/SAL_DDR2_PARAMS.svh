@@ -24,15 +24,25 @@
 
 // DRAM timing
 `define T_RCD_WIDTH                             3
+`define T_RCD_VALUE                             3'b011
 `define T_RP_WIDTH                              3
+`define T_RP_VALUE                              3'b011
 `define T_RAS_WIDTH                             5
+`define T_RAS_VALUE                             5'b01001
 `define T_RFC_WIDTH                             8
-`define T_RTP_WIDTH                             4
+`define T_RFC_VALUE                             8'b00011001
+`define T_RTP_WIDTH                             3
+`define T_RTP_VALUE                             3'b001
 `define T_WTP_WIDTH                             4
+`define T_WTP_VALUE                             4'b1000     // FIXME
 `define T_RRD_WIDTH                             4
-`define T_CCD_WIDTH                             4
+`define T_RRD_VALUE                             4'b011
+`define T_CCD_WIDTH                             2
+`define T_CCD_VALUE                             2'b01
 `define T_WTR_WIDTH                             8
+`define T_WTR_VALUE                             8'd1
 `define T_RTW_WIDTH                             8
+`define T_RTW_VALUE                             8'd1
 
 // derived parameters
 `define DRAM_BK_CNT                             1<<`DRAM_BA_WIDTH
