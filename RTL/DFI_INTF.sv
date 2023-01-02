@@ -114,13 +114,11 @@ interface SCHED_TIMING_IF ();
     );
 endinterface
 
-interface BK_SCHED_IF
+interface SCHED_IF
 (
     input                       clk,
     input                       rst_n
 );
-    logic   [`DRAM_RA_WIDTH-1:0]ra;
-    logic   [`DRAM_CA_WIDTH-1:0]ca;
     logic                       act_req;
     logic                       rd_req;
     logic                       wr_req;
@@ -131,14 +129,16 @@ interface BK_SCHED_IF
     logic                       wr_gnt;
     logic                       pre_gnt;
     logic                       ref_gnt;
+    logic   [`DRAM_BA_WIDTH-1:0]ba;
+    logic   [`DRAM_ADDR_WIDTH-1:0]addr;
 
     // synthesizable, for design
     modport SRC (
-        output                  ra, ca, act_req, rd_req, wr_req, pre_req, ref_req,
+        output                  act_req, rd_req, wr_req, pre_req, ref_req, ba, addr,
         input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
     modport DST (
-        input                   ra, ca, act_req, rd_req, wr_req, pre_req, ref_req,
+        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, addr,
         output                  act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
 endinterface

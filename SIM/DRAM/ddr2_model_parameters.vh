@@ -31,6 +31,7 @@
                                           // ------ ----- -----------
 `define x8
 `define x512Mb
+`define sg25E
 
 `ifdef x256Mb
 

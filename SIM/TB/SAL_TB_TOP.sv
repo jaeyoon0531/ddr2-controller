@@ -144,13 +144,12 @@ module SAL_TB_TOP;
         .rdqs_n                     (ddr_rdqs_n)
     );
 
-
     initial begin
         axi_aw_if.init();
         axi_ar_if.init();
 
         @(posedge rst_n);       // wait for a reset release
-        repeat (3) @(posedge clk);
+        repeat (20) @(posedge clk);
 
         axi_ar_if.transfer('d0, 'd0, 'd0, 'd0, 'd0);
         axi_ar_if.transfer('d0, 'd4, 'd0, 'd0, 'd0);

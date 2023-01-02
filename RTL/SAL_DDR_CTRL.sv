@@ -48,6 +48,20 @@ module SAL_DDR_CTRL
         .bk_req_if_arr              (bk_req_if_arr)
     );
 
+    SAL_BK_CTRL                 u_bank_ctrl
+    (
+        .clk                        (clk),
+        .rst_n                      (rst_n),
+
+        .bk_req_if                  (bk_req_if_arr[0]),
+        .bk_timing_if               (bk_timing_if),
+        .sched_timing_if            (sched_timing_if),
+        .dfi_ctrl_if                (dfi_ctrl_if),
+
+        .ref_req_i                  (1'b0),
+        .ref_gnt_o                  ()
+    );
+    /*
     genvar geni;
 
     generate
@@ -59,10 +73,11 @@ module SAL_DDR_CTRL
 
             .bk_req_if                  (bk_req_if_arr[geni]),
             .bk_timing_if               (bk_timing_if),
-            .bk_sched_if                (bk_sched_if_arr[geni]),
+            .sched_timing_if            (sched_timing_if),
+            .dfi_ctrl_if                (dfi_ctrl_if),
 
-            .pb_ref_req_i               (1'b0),
-            .pb_ref_gnt_o               ()
+            .ref_req_i                  (1'b0),
+            .ref_gnt_o                  ()
         );
     end
     endgenerate
@@ -75,5 +90,6 @@ module SAL_DDR_CTRL
         .bk_sched_if                (bk_sched_if_arr),
         .dfi_ctrl_if                (dfi_ctrl_if)
     );
+    */
 
 endmodule // SAL_DDR_CTRL
