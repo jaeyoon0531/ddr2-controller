@@ -11,11 +11,11 @@ module SAL_DDR2_CTRL
     APB_IF                      apb_if,
 
     // AXI interface
-    AXI_A_IF                    axi_ar_if,
-    AXI_A_IF                    axi_aw_if,
-    AXI_W_IF                    axi_w_if,
-    AXI_B_IF                    axi_b_if,
-    AXI_R_IF                    axi_r_if,
+    AXI_A_IF.DST                axi_ar_if,
+    AXI_A_IF.DST                axi_aw_if,
+    AXI_W_IF.DST                axi_w_if,
+    AXI_B_IF.SRC                axi_b_if,
+    AXI_R_IF.SRC                axi_r_if,
 
     // DFI interface
     DFI_CTRL_IF                 dfi_ctrl_if,

@@ -14,21 +14,19 @@ module SAL_SCHED
 );
 
     always_comb begin
-        /*
-        bk_sched_if[0].act_gnt          = 1'b0;
-        bk_sched_if[0].rd_gnt           = 1'b0;
-        bk_sched_if[0].wr_gnt           = 1'b0;
-        bk_sched_if[0].pre_gnt          = 1'b0;
-        bk_sched_if[0].ref_gnt          = 1'b0;
-        */
-
         bk_sched_if[0].act_gnt          = bk_sched_if[0].act_req;
         bk_sched_if[0].rd_gnt           = bk_sched_if[0].rd_req;
         bk_sched_if[0].wr_gnt           = bk_sched_if[0].wr_req;
         bk_sched_if[0].pre_gnt          = bk_sched_if[0].pre_req;
         bk_sched_if[0].ref_gnt          = bk_sched_if[0].ref_req;
-        
-        /*
+
+       /*
+        bk_sched_if[0].act_gnt          = 1'b0;
+        bk_sched_if[0].rd_gnt           = 1'b0;
+        bk_sched_if[0].wr_gnt           = 1'b0;
+        bk_sched_if[0].pre_gnt          = 1'b0;
+        bk_sched_if[0].ref_gnt          = 1'b0;
+
         // priority 1: (row miss) precharge
         if (bk_sched_if[0].pre_req) begin
             bk_sched_if[0].pre_gnt        = 1'b1;

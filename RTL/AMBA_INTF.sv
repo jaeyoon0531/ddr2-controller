@@ -1,7 +1,7 @@
 `include "TIME_SCALE.svh"
 `include "SAL_DDR2_PARAMS.svh"
 
-// DONE: merge AW and AR interfaces 
+// DONE: merge AW and AR interfaces
 
 interface AXI_A_IF
 #(
@@ -17,15 +17,76 @@ interface AXI_A_IF
     logic                       aready;
     logic   [ID_WIDTH-1:0]      aid;
     logic   [ADDR_WIDTH-1:0]    aaddr;
-    logic   [ADDR_LEN-1:0]      alen;                   
+    logic   [ADDR_LEN-1:0]      alen;
     logic   [2:0]               asize;
     logic   [1:0]               aburst;
 
+    // synthesizable, for design
+    modport                     SRC (
+        output                      avalid,
+        output                      aid,
+        output                      aaddr,
+        output                      alen,
+        output                      asize,
+        output                      aburst,
+        input                       aready
+    );
+
+    modport                     DST (
+        output                      avalid,
+        output                      aid,
+        output                      aaddr,
+        output                      alen,
+        output                      asize,
+        output                      aburst,
+        input                       aready
+    );
+
     // for verification only
     // synthesis translate_off
+    clocking SRC_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
 
-    // driver side
-    function void reset();   // does not consume timing
+        output                      avalid;
+        output                      aid;
+        output                      aaddr;
+        output                      alen;
+        output                      asize;
+        output                      aburst;
+        input                       aready;
+    endclocking
+
+    clocking DST_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+
+        input                       avalid;
+        input                       aid;
+        input                       aaddr;
+        input                       alen;
+        input                       asize;
+        input                       aburst;
+        output                      aready;
+    endclocking
+
+    clocking MON_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+
+        input                       avalid;
+        input                       aid;
+        input                       aaddr;
+        input                       alen;
+        input                       asize;
+        input                       aburst;
+        input                       aready;
+    endclocking
+
+    modport SRC_TB (clocking SRC_CB, input clk, rst_n);
+    modport DST_TB (clocking DST_CB, input clk, rst_n);
+
+    function void init();   // does not consume timing
         avalid                      = 1'b0;
         aid                         = 'hx;
         aaddr                       = 'hx;
@@ -39,132 +100,24 @@ interface AXI_A_IF
                     input   [ADDR_LEN-1:0]      len,
                     input   [2:0]               size,
                     input   [1:0]               burst);
-        avalid                      = 1'b1;
-        aid                         = id;
-        aaddr                       = addr;
-        alen                        = len;
-        asize                       = size;
-        aburst                      = burst;
-        while (aready!=1'b1) begin
+        SRC_CB.avalid               <= 1'b1;
+        SRC_CB.aid                  <= id;
+        SRC_CB.aaddr                <= addr;
+        SRC_CB.alen                 <= len;
+        SRC_CB.asize                <= size;
+        SRC_CB.aburst               <= burst;
+        while (SRC_CB.aready!=1'b1) begin
+            $display("A", $time, SRC_CB.aready);
             @(posedge clk);
         end
-        @(posedge clk);
-        reset();
+        SRC_CB.avalid               <= 1'b0;
+        SRC_CB.aid                  <= 'hx;
+        SRC_CB.aaddr                <= 'hx;
+        SRC_CB.alen                 <= 'hx;
+        SRC_CB.asize                <= 'hx;
+        SRC_CB.aburst               <= 'hx;
     endtask
-    //
-
-    clocking driver_cb_icnt_aw @(posedge clk);
-        //default input #1 output #1;
-
-        // on chip - w
-        output          aid;
-        output          aaddr;       
-        output          avalid;
-        output          alen;
-        output          asize;
-        output          aburst;
-        // dram - w
-        input           aready;
-
-    endclocking
-
-    clocking driver_cb_mc_aw @(posedge clk);
-        //default input #1 output #1;
-
-        // on chip - w
-        input          aid;
-        input          aaddr;       
-        input          avalid;
-        input          alen;
-        input          asize;
-        input          aburst;
-        // dram - w
-        output           aready;
-
-    endclocking
-
-
-    clocking driver_cb_icnt_ar @(posedge clk);
-        //default input #1 output #1;
-
-        // on chip - w
-        output          aid;
-        output          aaddr;       
-        output          avalid;
-        output          alen;
-        output          asize;
-        output          aburst;
-        // dram - w
-        input           aready;
-
-    endclocking
-
-    clocking driver_cb_mc_ar @(posedge clk);
-        //default input #1 output #1;
-
-        // on chip - w
-        input          aid;
-        input          aaddr;       
-        input          avalid;
-        input          alen;
-        input          asize;
-        input          aburst;
-        // dram - w
-        output           aready;
-
-    endclocking
-
-/*  clocking monitor_cb_icnt_aw @(posedge clk);
-    //default input #1 output #1;
-
-        input          aid;
-        input          aaddr;       
-        input          avalid;
-        input          alen;
-        input          asize;
-        input          aburst;
-
-        input          aready;
-
-endclocking
-*/
-    clocking monitor_cb_mc_aw @(posedge clk);
-        //default input #1 output #1;
-
-        input          aid;
-        input          aaddr;       
-        input          avalid;
-        input          alen;
-        input          asize;
-        input          aburst;
-        input          aready;
-
-    endclocking
-
-    clocking monitor_cb_mc_ar @(posedge clk);
-        //default input #1 output #1;
-
-        input          aid;
-        input          aaddr;       
-        input          avalid;
-        input          alen;
-        input          asize;
-        input          aburst;
-        input          aready;
-
-    endclocking
     // synthesis translate_on
-
-    modport DRIVER_ICNT_AW (clocking driver_cb_icnt_aw, input clk, rst_n);
-    modport DRIVER_MC_AW (clocking driver_cb_mc_aw, input clk, rst_n);
-
-    modport DRIVER_ICNT_AR (clocking driver_cb_icnt_ar, input clk, rst_n);
-    modport DRIVER_MC_AR (clocking driver_cb_mc_ar, input clk, rst_n);
-
-    // modport MONITOR_ICNT_AW (clocking monitor_cb_icnt_aw, input clk, rst_n);
-    modport MONITOR_MC_AW (clocking monitor_cb_mc_aw, input clk, rst_n);
-    modport MONITOR_MC_AR (clocking monitor_cb_mc_ar, input clk, rst_n);
-
 endinterface
 
 interface AXI_W_IF
@@ -183,65 +136,74 @@ interface AXI_W_IF
     logic   [DATA_WIDTH/8-1:0]  wstrb;
     logic                       wlast;
 
-    clocking driver_cb_icnt_w @(posedge clk);
-        //default input #1 output #1;
+    // synthesizable, for design
+    modport                     SRC (
+        output                      wvalid,
+        output                      wid,
+        output                      wdata,
+        output                      wstrb,
+        output                      wlast,
+        input                       wready
+    );
 
-        // on chip - w
-        output          wid;
-        output          wdata;
-        output          wstrb;
-        output          wlast;
-        output          wvalid;
-        // dram - w
-        input           wready;
+    modport                     DST (
+        input                       wvalid,
+        input                       wid,
+        input                       wdata,
+        input                       wstrb,
+        input                       wlast,
+        output                      wready
+    );
+
+    // for verification only
+    // synthesis translate_off
+    clocking SRC_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
+
+        output                      wvalid;
+        output                      wid;
+        output                      wdata;
+        output                      wstrb;
+        output                      wlast;
+        input                       wready;
     endclocking
 
-    clocking driver_cb_mc_w @(posedge clk);
-        //default input #1 output #1;
+    clocking DST_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
 
-        // on chip - w
-        input           wid;
-        input           wdata;
-        input           wstrb;
-        input           wlast;
-        input           wvalid;
-        // dram - w
-        output          wready;
+        input                       wvalid;
+        input                       wid;
+        input                       wdata;
+        input                       wstrb;
+        input                       wlast;
+        output                      wready;
     endclocking
 
-/*  clocking monitor_cb_icnt_w @(posedge clk);
-    //default input #1 output #1;
+    clocking MON_CB @(posedge clk);
+        default input #0.1 output #0.1; // sample -0.1ns before posedge
+                                        // drive 0.1ns after posedge
 
-    // on chip - w
-    input wready;
-    // dram - w
-    input wid;
-    input wdata;
-    input wstrb;
-    input wlast;
-    input wvalid;
-
-endclocking
-*/
-    clocking monitor_cb_mc_w @(posedge clk);
-        //default input #1 output #1;
-
-        // on chip - w
-        input           wready;
-        // dram - w
-        input           wid;
-        input           wdata;
-        input           wstrb;
-        input           wlast;
-        input           wvalid;
+        input                       wvalid;
+        input                       wid;
+        input                       wdata;
+        input                       wstrb;
+        input                       wlast;
+        input                       wready;
     endclocking
 
-    modport DRIVER_ICNT_W (clocking driver_cb_icnt_w, input clk, rst_n);
-    modport DRIVER_MC_W (clocking driver_cb_mc_w, input clk, rst_n);
+    modport SRC_TB (clocking SRC_CB, input clk, rst_n);
+    modport DST_TB (clocking DST_CB, input clk, rst_n);
 
-    // modport MONITOR_ICNT_W (clocking monitor_cb_icnt_w, input clk, rst_n);
-    modport MONITOR_MC_W (clocking monitor_cb_mc_w, input clk, rst_n);
-
+    function void init();   // does not consume timing
+        wvalid                      = 1'b0;
+        wid                         = 'hx;
+        wdata                       = 'hx;
+        wstrb                       = 'hx;
+        wlast                       = 'hx;
+    endfunction
+    // synthesis translate_on
 endinterface
 
 interface AXI_B_IF
@@ -256,6 +218,21 @@ interface AXI_B_IF
     logic                       bready;
     logic   [ID_WIDTH-1:0]      bid;
     logic   [1:0]               bresp;
+
+    // synthesizable, for design
+    modport                     SRC (
+        output                      bvalid,
+        output                      bid,
+        output                      bresp,
+        input                       bready
+    );
+
+    modport                     DST (
+        input                       bvalid,
+        input                       bid,
+        input                       bresp,
+        output                      bready
+    );
 
 endinterface
 
@@ -276,6 +253,25 @@ interface AXI_R_IF
     logic   [DATA_WIDTH-1:0]    rdata;
     logic   [1:0]               rresp;
     logic                       rlast;
+
+    // synthesizable, for design
+    modport                     SRC (
+        output                      rvalid,
+        output                      rid,
+        output                      rdata,
+        output                      rresp,
+        output                      rlast,
+        input                       rready
+    );
+
+    modport                     DST (
+        input                       rvalid,
+        input                       rid,
+        input                       rdata,
+        input                       rresp,
+        input                       rlast,
+        output                      rready
+    );
 
     // For verification
     // synthesis translate_off

@@ -8,7 +8,7 @@ module SAL_ADDR_DECODER
     input                        rst_n,
 
     // request from the AXI side
-    AXI_A_IF                    icnt_axi_a_if,
+    AXI_A_IF.DST                icnt_axi_a_if,
     // request to bank controller
     BK_REQ_IF                   bk_req_if_arr[`DRAM_BK_CNT]
 );

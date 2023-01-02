@@ -150,8 +150,8 @@ module SAL_TB_TOP;
 
 
     initial begin
-        axi_aw_if.reset();
-        axi_ar_if.reset();
+        axi_aw_if.init();
+        axi_ar_if.init();
 
         @(posedge rst_n);       // wait for a reset release
         repeat (5) @(posedge clk);
