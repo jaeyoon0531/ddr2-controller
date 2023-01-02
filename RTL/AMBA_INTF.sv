@@ -1,3 +1,4 @@
+`include "TIME_SCALE.svh"
 `include "SAL_DDR2_PARAMS.svh"
 
 // DONE: merge AW and AR interfaces 
