@@ -6,10 +6,10 @@ module SAL_SCHED
 (
     // clock & reset
     input                       clk,
-    input                       rst,
+    input                       rst_n,
 
     // requests from banks
-    BK_SCHED_INTF               bk_sched_intf[`BK_CNT]
+    BK_SCHED_INTF               bk_sched_intf[`DRAM_BK_CNT],
 
     DFI_CTRL_INTF               dfi_ctrl_intf
 );

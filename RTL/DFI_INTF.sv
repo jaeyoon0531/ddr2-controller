@@ -1,3 +1,6 @@
+`include "AXI_TYPEDEFS.svh"
+`include "SAL_DDR2_PARAMS.svh"
+
 interface DFI_CTRL_INTF
 (
     input                       clk,

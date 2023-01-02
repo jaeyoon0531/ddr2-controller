@@ -6,19 +6,19 @@ module SAL_ADDR_DECODER
 (
     // clock & reset
     input                        clk,
-    input                        rst,
+    input                        rst_n,
 
     // request from the AXI side
     AXI_A_INTF                  icnt_axi_a_intf,
     // request to bank controller
-    BK_REQ_INTF                 bk_req_intf_arr[`BK_CNT]
+    BK_REQ_INTF                 bk_req_intf_arr[`DRAM_BK_CNT]
 );
 
     // SystemVerilog generate statement for banks
     genvar geni;
 
     generate
-    for (geni=0; geni<BK_CNT; geni++) begin: bank_ctrl_signals
+    for (geni=0; geni<`DRAM_BK_CNT; geni++) begin: bank_ctrl_signals
         always_comb begin
             bk_axi_a_intf[geni].id      = icnt_axi_a_intf.aid;
             bk_axi_a_intf[geni].ra      = get_dram_ra(icnt_axi_a_intf.aaddr);

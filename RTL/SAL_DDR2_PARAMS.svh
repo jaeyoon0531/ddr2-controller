@@ -14,15 +14,15 @@
 // derived parameters
 `define DRAM_BK_CNT                             1<<`DRAM_BA_WIDTH
 
-function [`DRAM_BA_WIDTH-1:0]] get_dram_ba(input [`AXI_ADDR_WIDTH] addr);
+function [`DRAM_BA_WIDTH-1:0] get_dram_ba(input [`AXI_ADDR_WIDTH-1:0] addr);
     return 'd0;
 endfunction
 
-function [`DRAM_RA_WIDTH-1:0]] get_dram_ra(input [`AXI_ADDR_WIDTH] addr);
-    return addr[DRAM_CA_WIDTH+:`DRAM_RA_WIDTH];
+function [`DRAM_RA_WIDTH-1:0] get_dram_ra(input [`AXI_ADDR_WIDTH-1:0] addr);
+    return addr[`DRAM_CA_WIDTH+:`DRAM_RA_WIDTH];
 endfunction
 
-function [`DRAM_CA_WIDTH-1:0]] get_dram_ca(input [`AXI_ADDR_WIDTH] addr);
-    return addr[DRAM_CA_WIDTH-1:0];
+function [`DRAM_CA_WIDTH-1:0] get_dram_ca(input [`AXI_ADDR_WIDTH-1:0] addr);
+    return addr[`DRAM_CA_WIDTH-1:0];
 endfunction
 

@@ -13,11 +13,11 @@ module SAL_BK_CTRL
     // timing parameters
     BK_TIMING_INTF              bk_timing_intf,
     // request to the scheduler
-    BK_SCHED_INTF               bk_sched_intf
+    BK_SCHED_INTF               bk_sched_intf,
 
     // per-bank auto-refresh requests
-    input                       pb_aref_req_i,
-    output                      pb_aref_gnt_o
+    input   wire                pb_aref_req_i,
+    output  logic               pb_aref_gnt_o
 );
 
     localparam                  S_CLOSED    = 1'b0,

@@ -7,7 +7,7 @@ module SAL_TIMING_CNTR
 (
     // clock & reset
     input                       clk,
-    input                       rst,
+    input                       rst_n,
 
     // request from the address decoder
     input                       reset_cmd_i,
@@ -31,7 +31,7 @@ module SAL_TIMING_CNTR
     always_comb begin
         if (reset_cmd_i)
             cntr_n                  = reset_value_i;
-        else (cntr != 'd0)
+        else if (cntr != 'd0)
             cntr_n                  = cntr - 'd1;
         else
             cntr_n                  = cntr;

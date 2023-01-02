@@ -6,7 +6,7 @@ module SAL_DDR2_CTRL
 (
     // clock & reset
     input                       clk,
-    input                       rst,
+    input                       rst_n,
 
     // APB interface
     APB_INTF                    apb_intf,
@@ -23,8 +23,8 @@ module SAL_DDR2_CTRL
     DFI_RD_INTF                 dfi_rd_intf
 );
 
-    BK_REQ_INTF                 bk_req_intf_arr[`BK_CNT];
-    BK_SCHED_INTF               bk_sched_intf_arr[`BK_CNT];
+    BK_REQ_INTF                 bk_req_intf_arr[`DRAM_BK_CNT];
+    BK_SCHED_INTF               bk_sched_intf_arr[`DRAM_BK_CNT];
 
     SAL_ADDR_DECODER            u_decoder
     (
@@ -38,7 +38,7 @@ module SAL_DDR2_CTRL
     genvar geni;
 
     generate
-    for (geni=0; geni<`BK_CNT; geni++) begin: bank_ctrl
+    for (geni=0; geni<`DRAM_BK_CNT; geni=geni+1) begin: bank_ctrl
         SAL_BK_CTRL                 u_bank_ctrl
         (
             .clk                        (clk),
@@ -58,5 +58,5 @@ module SAL_DDR2_CTRL
         .sched_intf                 (bk_sched_intf_arr),
         .dfi_ctrl_intf              (dfi_ctrl_intf)
     );
-    .
+
 endmodule // SAL_DDR2_CTRL
