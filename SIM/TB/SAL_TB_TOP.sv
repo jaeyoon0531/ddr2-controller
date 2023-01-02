@@ -50,7 +50,7 @@ module SAL_TB_TOP;
     wire    [7:0]                   ddr_dm_rdqs;
     wire    [7:0]                   ddr_rdqs_n;
 
-    SAL_DDR_CTRL                   u_mem_ctrl
+    SAL_DDR_CTRL                    u_dram_ctrl
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
