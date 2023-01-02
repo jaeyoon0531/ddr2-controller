@@ -1,3 +1,5 @@
+`include "TIME_SCALE.svh"
+
 module DDRPHY
 #(
     parameter real                  CLK_PERIOD  = 2.5

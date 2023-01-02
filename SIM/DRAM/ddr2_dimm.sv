@@ -1,4 +1,4 @@
-`timescale 1ps / 1ps
+`include "TIME_SCALE.svh"
 
 module ddr2_dimm (
     input   wire                ck,

@@ -1,5 +1,4 @@
-`timescale 1ns/1ps
-
+`include "TIME_SCALE.svh"
 `include "SAL_DDR2_PARAMS.svh"
 
 module SAL_SCHED
