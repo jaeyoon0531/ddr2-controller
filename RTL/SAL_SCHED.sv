@@ -14,4 +14,9 @@ module SAL_SCHED
     DFI_CTRL_INTF               dfi_ctrl_intf
 );
 
+    always_comb begin
+        // priority 1: (row miss) precharge
+        // priority 2: read/write
+    end
+
 endmodule

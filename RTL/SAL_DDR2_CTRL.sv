@@ -38,7 +38,7 @@ module SAL_DDR2_CTRL
     genvar geni;
 
     generate
-    for (geni=0; geni<`DRAM_BK_CNT; geni=geni+1) begin: bank_ctrl
+    for (geni=0; geni<`DRAM_BK_CNT; geni=geni+1) begin: bk_ctrl
         SAL_BK_CTRL                 u_bank_ctrl
         (
             .clk                        (clk),

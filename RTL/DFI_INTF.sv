@@ -6,6 +6,25 @@ interface DFI_CTRL_INTF
     input                       clk,
     input                       rst_n
 );
+    logic                       cke;
+    logic   [1:0]               cs_n;
+    logic                       ras_n;
+    logic                       cas_n;
+    logic                       we_n;
+    logic   [1:0]               ba;
+    logic   [14:0]              addr;
+    logic                       odt;
+
+endinterface
+
+interface DFI_WR_INTF
+(
+    input                       clk,
+    input                       rst_n
+);
+    logic                       wrdata_en;
+    logic   [63:0]              wrdata;
+    logic   [7:0]               wrdata_mask;
 endinterface
 
 interface DFI_RD_INTF
@@ -30,19 +49,21 @@ interface BK_REQ_INTF
 
 endinterface
 
-interface BK_TIMING_INTF
-(
-    input                       clk,
-    input                       rst_n
-);
+interface BK_TIMING_INTF ();
     logic   [`T_RCD_WIDTH-1:0]  t_rcd;
     logic   [`T_RP_WIDTH-1:0]   t_rp;
     logic   [`T_RAS_WIDTH-1:0]  t_ras;
-    logic   [7:0]               t_rfc;
-    //logic [3:0]               t_wtr;
-    //logic [3:0]               t_rtw;
-    logic   [3:0]               t_rtp;
-    logic   [3:0]               t_wtp;
+    logic   [`T_RFC_WIDTH-1:0]  t_rfc;
+    logic   [`T_RTP_WIDTH-1:0]  t_rtp;
+    logic   [`T_WTP_WIDTH-1:0]  t_wtp;
+
+endinterface
+
+interface SCHED_TIMING_INTF ();
+    logic   [`T_RRD_WIDTH-1:0]  t_rrd;
+    logic   [`T_CCD_WIDTH-1:0]  t_ccd;
+    logic   [`T_WTR_WIDTH-1:0]  t_wtr;
+    logic   [`T_RTW_WIDTH-1:0]  t_rtw;
 
 endinterface
 

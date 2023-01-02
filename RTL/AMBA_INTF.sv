@@ -20,6 +20,37 @@ interface AXI_A_INTF
     logic   [2:0]               asize;
     logic   [1:0]               aburst;
 
+    // for verification only
+    // synthesis translate_off
+
+    // driver side
+    function reset();   // does not consume timing
+        avalid                      = 1'b0;
+        aid                         = 'hx;
+        aaddr                       = 'hx;
+        alen                        = 'hx;
+        asize                       = 'hx;
+        aburst                      = 'hx;
+    endfunction
+
+    task transfer(  input   [ID_WIDTH-1:0]      id,
+                    input   [ADDR_WIDTH-1:0]    addr,
+                    input   [ADDR_LEN-1:0]      len,
+                    input   [2:0]               size,
+                    input   [1:0]               burst);
+        avalid                      <= 1'b1;
+        aid                         <= id;
+        aaddr                       <= addr;
+        alen                        <= len;
+        asize                       <= size;
+        aburst                      <= burst;
+        while (aready!=1'b1) begin
+            @(posedge clk);
+        end
+        @(posedge clk);
+    endtask
+    //
+
     clocking driver_cb_icnt_aw @(posedge clk);
         //default input #1 output #1;
 
@@ -120,6 +151,7 @@ endclocking
         input          aready;
 
     endclocking
+    // synthesis translate_on
 
     modport DRIVER_ICNT_AW (clocking driver_cb_icnt_aw, input clk, rst_n);
     modport DRIVER_MC_AW (clocking driver_cb_mc_aw, input clk, rst_n);

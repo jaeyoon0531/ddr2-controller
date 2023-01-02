@@ -35,7 +35,7 @@ module SAL_ADDR_DECODER
         ba                          = get_dram_ba(icnt_axi_a_intf.aaddr);
 
         // connect the target bank controller's signals to the input
-        for (int i=0; i<BK_CNT; i++) begin
+        for (int i=0; i<`DRAM_BK_CNT; i++) begin
             bk_axi_a_intf[i].valid      = 1'b0;
         end
         bk_axi_a_intf[ba].valid     = icnt_axi_a_intf.avalid;

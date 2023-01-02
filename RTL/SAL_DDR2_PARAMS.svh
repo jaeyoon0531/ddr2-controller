@@ -10,6 +10,13 @@
 `define T_RCD_WIDTH                             3
 `define T_RP_WIDTH                              3
 `define T_RAS_WIDTH                             5
+`define T_RFC_WIDTH                             8
+`define T_RTP_WIDTH                             4
+`define T_WTP_WIDTH                             4
+`define T_RRD_WIDTH                             4
+`define T_CCD_WIDTH                             4
+`define T_WTR_WIDTH                             8
+`define T_RTW_WIDTH                             8
 
 // derived parameters
 `define DRAM_BK_CNT                             1<<`DRAM_BA_WIDTH
