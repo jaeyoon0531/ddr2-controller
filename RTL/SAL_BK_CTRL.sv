@@ -183,7 +183,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.act_gnt),
-        .reset_value_i              (sched_timing_if.t_rrd),
+        .reset_value_i              (sched_timing_if.t_rrd_m1),
         .is_zero_o                  (is_t_rrd_met)
     );
 
@@ -193,7 +193,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.rd_gnt | sched_if.wr_gnt),
-        .reset_value_i              (sched_timing_if.t_ccd),
+        .reset_value_i              (sched_timing_if.t_ccd_m1),
         .is_zero_o                  (is_t_ccd_met)
     );
 
@@ -203,7 +203,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.act_gnt),
-        .reset_value_i              (bk_timing_if.t_rcd),
+        .reset_value_i              (bk_timing_if.t_rcd_m1),
         .is_zero_o                  (is_t_rcd_met)
     );
 
@@ -213,7 +213,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.pre_gnt),
-        .reset_value_i              (bk_timing_if.t_rp),
+        .reset_value_i              (bk_timing_if.t_rp_m1),
         .is_zero_o                  (is_t_rp_met)
     );
 
@@ -223,7 +223,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.act_gnt),
-        .reset_value_i              (bk_timing_if.t_ras),
+        .reset_value_i              (bk_timing_if.t_ras_m1),
         .is_zero_o                  (is_t_ras_met)
     );
 
@@ -233,7 +233,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.ref_gnt),
-        .reset_value_i              (bk_timing_if.t_rfc),
+        .reset_value_i              (bk_timing_if.t_rfc_m1),
         .is_zero_o                  (is_t_rfc_met)
     );
 
@@ -243,7 +243,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.rd_gnt),
-        .reset_value_i              (bk_timing_if.t_rtp),
+        .reset_value_i              (bk_timing_if.t_rtp_m1),
         .is_zero_o                  (is_t_rtp_met)
     );
 
@@ -253,7 +253,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.wr_gnt),
-        .reset_value_i              (bk_timing_if.t_wtp),
+        .reset_value_i              (bk_timing_if.t_wtp_m1),
         .is_zero_o                  (is_t_wtp_met)
     );
 

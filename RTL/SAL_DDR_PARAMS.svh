@@ -31,25 +31,25 @@
 `define ROUND_UP(x)                             ((x+`CLK_PERIOD*1000-1)/(`CLK_PERIOD*1000))
 
 `define T_RCD_WIDTH                             3
-`define T_RCD_VALUE                             (`ROUND_UP(TRCD)-1)
+`define T_RCD_VALUE_M1                          (`ROUND_UP(TRCD)-1)
 `define T_RP_WIDTH                              3
-`define T_RP_VALUE                              (`ROUND_UP(TRP)-1)
+`define T_RP_VALUE_M1                           (`ROUND_UP(TRP)-1)
 `define T_RAS_WIDTH                             5
-`define T_RAS_VALUE                             (`ROUND_UP(TRAS_MIN)-1)
+`define T_RAS_VALUE_M1                          (`ROUND_UP(TRAS_MIN)-1)
 `define T_RFC_WIDTH                             8
-`define T_RFC_VALUE                             (`ROUND_UP(TRFC_MIN)-1)
+`define T_RFC_VALUE_M1                          (`ROUND_UP(TRFC_MIN)-1)
 `define T_RTP_WIDTH                             3
-`define T_RTP_VALUE                             (`ROUND_UP(TRTP)-1)
+`define T_RTP_VALUE_M1                          (`ROUND_UP(TRTP)-1)
 `define T_WTP_WIDTH                             4
-`define T_WTP_VALUE                             4'b1000     // FIXME
+`define T_WTP_VALUE_M1                          4'b1000     // FIXME
 `define T_RRD_WIDTH                             4
-`define T_RRD_VALUE                             (`ROUND_UP(TRRD)-1)
+`define T_RRD_VALUE_M1                          (`ROUND_UP(TRRD)-1)
 `define T_CCD_WIDTH                             2
-`define T_CCD_VALUE                             TCCD-1      // in clock cycles
+`define T_CCD_VALUE_M1                          TCCD-1      // in clock cycles
 `define T_WTR_WIDTH                             8
-`define T_WTR_VALUE                             8'd1
+`define T_WTR_VALUE_M1                          8'd1
 `define T_RTW_WIDTH                             8
-`define T_RTW_VALUE                             8'd1
+`define T_RTW_VALUE_M1                          8'd1
 
 //----------------------------------------------------------
 // Address mapping
