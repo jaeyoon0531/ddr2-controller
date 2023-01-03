@@ -117,6 +117,11 @@ interface AXI_W_IF
         output                      wready
     );
 
+    modport                     MON (
+        input                       wvalid, wid, wdata, wstrb, wlast,
+        input                       wready
+    );
+
     // for verification only
     // synthesis translate_off
     clocking SRC_CB @(posedge clk);
@@ -224,9 +229,12 @@ interface AXI_B_IF
     modport DST_TB (clocking DST_CB, input clk, rst_n);
 
     function void init();   // does not consume timing
+        bready                      = 1'b0;
+        /*
         bvalid                      = 1'b0;
         bid                         = 'hx;
         bresp                       = 'hx;
+        */
     endfunction
 
     task transfer(  input   [ID_WIDTH-1:0]      id,
@@ -301,11 +309,14 @@ interface AXI_R_IF
     modport DST_TB (clocking DST_CB, input clk, rst_n);
 
     function void init();   // does not consume timing
+        rready                      = 1'b0;
+        /*
         rvalid                      = 1'b0;
         rid                         = 'hx;
         rdata                       = 'hx;
         rresp                       = 'hx;
         rlast                       = 'hx;
+        */
     endfunction
 
     task transfer(  input   [ID_WIDTH-1:0]      id,

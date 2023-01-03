@@ -45,7 +45,9 @@ module SAL_DDR_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .icnt_axi_a_if              (axi_ar_if),
+        .axi_ar_if                  (axi_ar_if),
+        .axi_aw_if                  (axi_aw_if),
+        .axi_w_if                   (axi_w_if),
         .bk_req_if_arr              (bk_req_if_arr)
     );
 

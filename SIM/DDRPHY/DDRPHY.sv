@@ -65,16 +65,16 @@ module DDRPHY
     assign  wdata_ddr               = clk ? wdata[127:64] : wdata[63:0];
     assign  wmask_ddr               = clk ? wmask[15:8] : wmask[7:0];
 
-    assign  dqs                     =  (wren & !wren_d1 & ~clk)
+    assign  dqs                     =  (wren & !wren_d1)
                                      ? 8'h00 // preamble
                                      : (wren_d1) ? {8{clk}}
                                               : 8'hz;
-    assign  dqs_n                   =  (wren & !wren_d1 & ~clk)
+    assign  dqs_n                   =  (wren & !wren_d1)
                                      ? 8'hFF // preamble
                                      : (wren_d1) ? {8{~clk}}
                                               : 8'hz;
-    assign  dq                      = wren ? wdata_ddr : 'hz;
-    assign  dm_rdqs                 = wren ? wmask_ddr : 'hz;
+    assign  #(`CLK_PERIOD*3/4)  dq  = wren ? wdata_ddr : 'hz;
+    assign  #(`CLK_PERIOD*3/4)  dm_rdqs = wren ? wmask_ddr : 'hz;
 
     //----------------------------------------------------------
     // Read path
