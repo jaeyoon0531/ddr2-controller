@@ -8,7 +8,7 @@ module SAL_CFG
     input                       rst_n,
 
     // APB interface
-    APB_IF                      apb_if,
+    APB_IF.DST                  apb_if,
 
     // timing parameters
     BK_TIMING_IF.SRC            bk_timing_if,
@@ -26,5 +26,6 @@ module SAL_CFG
     assign  sched_timing_if.t_ccd   = `T_CCD_VALUE;
     assign  sched_timing_if.t_wtr   = `T_WTR_VALUE;
     assign  sched_timing_if.t_rtw   = `T_RTW_VALUE;
+    assign  sched_timing_if.dfi_rden_lat = 4'd6;
 
 endmodule

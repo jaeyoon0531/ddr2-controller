@@ -20,7 +20,8 @@ module ddr2_dimm (
 
     genvar gen_chip;
 
-    for (gen_chip=0; gen_chip<8; gen_chip=gen_chip+1) begin: chip
+    generate
+    for (gen_chip=0; gen_chip<8; gen_chip=gen_chip+1) begin: gen_chips
         ddr2_model                      u_dram
         (
             // command and address
@@ -44,8 +45,19 @@ module ddr2_dimm (
         );
 
         initial begin
-            force u_dram.init_done          = 1'b1;
+            repeat (5) @(posedge ck);
+            u_dram.initialize({1'b0,    // reserved
+                               1'd0,    // fast exit
+                               3'd5,    // write recover=6
+                               1'b0,    // DLL reset
+                               1'b0,    // normal
+                               3'd5,    // CAS latency=5
+                               1'b0,    // interleaved
+                               3'd2},   // BL4
+                              'h0, 'h0, 'h0
+                              );
         end
     end
+    endgenerate
 
 endmodule

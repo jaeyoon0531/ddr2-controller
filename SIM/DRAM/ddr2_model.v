@@ -121,7 +121,7 @@
 
 // DO NOT CHANGE THE TIMESCALE
 // MAKE SURE YOUR SIMULATOR USES "PS" RESOLUTION
-`include "TIME_SCALE.svh"
+`timescale 1ps / 1ps
 
 module ddr2_model (
     ck,
@@ -610,7 +610,7 @@ module ddr2_model (
         casex ({samebank, fromcmd, cmd})
             {1'b0, LOAD_MODE, 4'b0xxx  } : begin if (ck_cntr - ck_load_mode < TMRD)                                                                                       $display ("%m: at time %t ERROR:  tMRD violation during %s", $time, cmd_string[cmd]);                         end
             {1'b0, LOAD_MODE, 4'b100x  } : begin if (ck_cntr - ck_load_mode < TMRD)                                                                                 begin $display ("%m: at time %t INFO: Load Mode to Reset condition.", $time);                    init_done = 0; end end
-            {1'b0, REFRESH  , 4'b0xxx  } : begin if ($time - tm_refresh < TRFC_MIN)                                                                                       $display ("%m: at time %t ERROR:  tRFC violation during %s", $time, cmd_string[cmd]);                         end
+            {1'b0, REFRESH  , 4'b0xxx  } : begin if ($time - tm_refresh < TRFC_MIN)                                                                                       $display ("%m: at time %t ERROR:  tRFC violation during %s %d", $time, cmd_string[cmd], tm_refresh);                         end
             {1'b0, REFRESH  , PWR_DOWN } : ; // 1 tCK
             {1'b0, REFRESH  , SELF_REF } : begin if ($time - tm_refresh < TRFC_MIN)                                                                                 begin $display ("%m: at time %t INFO: Refresh to Reset condition", $time);                       init_done = 0; end end
             {1'b0, PRECHARGE, 4'b000x  } : begin if ($time - tm_precharge_all < TRPA)                                                                                     $display ("%m: at time %t ERROR:  tRPA violation during %s", $time, cmd_string[cmd]);
@@ -1711,7 +1711,7 @@ module ddr2_model (
     begin
         if (prev_cke) begin
             if ((i == 0) && ($time - tm_ck_pos < TIH))                      // Always check tIH for CS#
-                $display ("%m: at time %t ERROR:  tIH violation on %s by %t", $time, cmd_addr_string[i], tm_ck_pos + TIH - $time);
+                $display ("%m: at time %t ERROR:  tIH violation on %s by %t %t %t", $time, cmd_addr_string[i], tm_ck_pos + TIH - $time, tm_ck_pos, TIH);
             if ((i > 0) && (cs_n_in == 1'b0) && ($time - tm_ck_pos < TIH))  // Only check tIH for cmd_addr if CS# low
                 $display ("%m: at time %t ERROR:  tIH violation on %s by %t", $time, cmd_addr_string[i], tm_ck_pos + TIH - $time);
             if (dll_locked && ($time - tm_cmd_addr[i] < $rtoi(TIPW*tck_avg)))
