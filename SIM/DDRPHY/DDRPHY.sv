@@ -77,7 +77,7 @@ module DDRPHY
         else
             rden_shift_reg          <= {rden_shift_reg[0], dfi_rd_if.rddata_en};
 
-    assign  dfi_rd_if.rddata_valid  = rden_shift_reg[0];
+    assign  dfi_rd_if.rddata_valid  = rden_shift_reg[1];
     assign  dfi_rd_if.rddata        = {rdata_posedge, rdata_negedge};
 
 endmodule

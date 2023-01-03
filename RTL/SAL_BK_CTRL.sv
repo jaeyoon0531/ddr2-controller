@@ -65,6 +65,7 @@ module SAL_BK_CTRL
         sched_if.ba                 = 'h0;  // bank 0
         sched_if.ra                 = 'hx;
         sched_if.ca                 = 'hx;
+        sched_if.id                 = 'hx;
 
         case (state)
             S_CLOSED: begin     // the bank is closed
@@ -92,11 +93,13 @@ module SAL_BK_CTRL
                                 // WRITE command
                                 sched_if.wr_gnt             = 1'b1;
                                 sched_if.ca                 = bk_req_if.ca;
+                                sched_if.id                 = bk_req_if.id;
                             end
                             else begin
                                 // READ command
                                 sched_if.rd_gnt             = 1'b1;
                                 sched_if.ca                 = bk_req_if.ca;
+                                sched_if.id                 = bk_req_if.id;
                             end
                             bk_req_if.ready             = 1'b1;
                         end
