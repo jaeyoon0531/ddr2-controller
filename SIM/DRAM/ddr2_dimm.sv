@@ -48,10 +48,10 @@ module ddr2_dimm (
             repeat (5) @(posedge ck);
             u_dram.initialize({1'b0,    // reserved
                                1'd0,    // fast exit
-                               3'd3,    // write recover=4
+                               3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
-                               3'd4,    // CAS latency 4
+                               3'd5,    // CAS latency=5
                                1'b0,    // interleaved
                                3'd2},   // BL4
                               'h0, 'h0, 'h0

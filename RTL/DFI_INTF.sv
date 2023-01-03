@@ -130,7 +130,8 @@ interface SCHED_IF
     logic                       pre_gnt;
     logic                       ref_gnt;
     logic   [`DRAM_BA_WIDTH-1:0]ba;
-    logic   [`DRAM_ADDR_WIDTH-1:0]addr;
+    logic   [`DRAM_RA_WIDTH-1:0]ra;
+    logic   [`DRAM_CA_WIDTH-1:0]ca;
 
     // synthesizable, for design
     modport SRC (

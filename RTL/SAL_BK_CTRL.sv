@@ -61,7 +61,9 @@ module SAL_BK_CTRL
         sched_if.wr_gnt             = 1'b0;
         sched_if.pre_gnt            = 1'b0;
         sched_if.ref_gnt            = 1'b0;
-        sched_if.addr               = 'hx;
+        sched_if.ba                 = 'h0;  // bank 0
+        sched_if.ra                 = 'hx;
+        sched_if.ca                 = 'hx;
 
         case (state)
             S_CLOSED: begin     // the bank is closed
@@ -74,7 +76,7 @@ module SAL_BK_CTRL
                     else if (bk_req_if.valid) begin    // a new request came
                         // ACTIVATE command
                         sched_if.act_gnt            = 1'b1;
-                        sched_if.addr               = bk_req_if.ra;
+                        sched_if.ra                 = bk_req_if.ra;
 
                         cur_ra_n                    = bk_req_if.ra;
                         state_n                     = S_OPEN;
@@ -88,12 +90,12 @@ module SAL_BK_CTRL
                             if (bk_req_if.wr) begin
                                 // WRITE command
                                 sched_if.wr_gnt             = 1'b1;
-                                sched_if.addr               = bk_req_if.ca;
+                                sched_if.ca                 = bk_req_if.ca;
                             end
                             else begin
                                 // READ command
                                 sched_if.rd_gnt             = 1'b1;
-                                sched_if.addr               = bk_req_if.ca;
+                                sched_if.ca                 = bk_req_if.ca;
                             end
                             bk_req_if.ready             = 1'b1;
                         end
@@ -111,6 +113,7 @@ module SAL_BK_CTRL
         endcase
     end
 
+    // Follow the command truth table in the spec
     always_ff @(posedge clk)
         if (sched_if.ref_gnt) begin
             dfi_ctrl_if.cke             <= 1'b1;
@@ -129,7 +132,7 @@ module SAL_BK_CTRL
             dfi_ctrl_if.cas_n           <= 1'b1;
             dfi_ctrl_if.we_n            <= 1'b1;
             dfi_ctrl_if.ba              <= 'h0;
-            dfi_ctrl_if.addr            <= sched_if.addr;
+            dfi_ctrl_if.addr            <= sched_if.ra;
             dfi_ctrl_if.odt             <= 'h0;
         end
         else if (sched_if.wr_gnt) begin
@@ -139,7 +142,7 @@ module SAL_BK_CTRL
             dfi_ctrl_if.cas_n           <= 1'b0;
             dfi_ctrl_if.we_n            <= 1'b0;
             dfi_ctrl_if.ba              <= 'h0;
-            dfi_ctrl_if.addr            <= sched_if.addr;
+            dfi_ctrl_if.addr            <= sched_if.ca;
             dfi_ctrl_if.odt             <= 'h0;
         end
         else if (sched_if.rd_gnt) begin
@@ -149,7 +152,7 @@ module SAL_BK_CTRL
             dfi_ctrl_if.cas_n           <= 1'b0;
             dfi_ctrl_if.we_n            <= 1'b1;
             dfi_ctrl_if.ba              <= 'h0;
-            dfi_ctrl_if.addr            <= bk_req_if.ca;
+            dfi_ctrl_if.addr            <= sched_if.ca;
             dfi_ctrl_if.odt             <= 'h0;
         end else if (sched_if.pre_gnt) begin
             dfi_ctrl_if.cke             <= 1'b1;
@@ -158,7 +161,7 @@ module SAL_BK_CTRL
             dfi_ctrl_if.cas_n           <= 1'b1;
             dfi_ctrl_if.we_n            <= 1'b0;
             dfi_ctrl_if.ba              <= 'hx;
-            dfi_ctrl_if.addr            <= bk_req_if.ca;
+            dfi_ctrl_if.addr            <= 'hx
             dfi_ctrl_if.odt             <= 'hx;
         end
         else begin

@@ -148,13 +148,16 @@ module SAL_TB_TOP;
         axi_aw_if.init();
         axi_ar_if.init();
 
-        @(posedge rst_n);       // wait for a reset release
-        repeat (60) @(posedge clk);
+        // wait for a reset release
+        @(posedge rst_n);
+
+        // wait enough cycles for DRAM to finish their initialization
+        repeat (250) @(posedge clk);
 
         axi_ar_if.transfer('d0, 'd0, 'd0, 'd0, 'd0);
         axi_ar_if.transfer('d0, 'd4, 'd0, 'd0, 'd0);
 
-        repeat (100) @(posedge clk);
+        repeat (50) @(posedge clk);
         $finish;
     end
 

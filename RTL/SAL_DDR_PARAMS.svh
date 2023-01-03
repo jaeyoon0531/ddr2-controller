@@ -51,16 +51,24 @@
 `define T_RTW_WIDTH                             8
 `define T_RTW_VALUE                             8'd1
 
+//----------------------------------------------------------
+// Address mapping
+//----------------------------------------------------------
+// 10987654321098765432109876543210
+//         -------------        ---
+//            row               offset (64-bit)
+//                      --------
+//                       column (8-bit)
 function [`DRAM_BA_WIDTH-1:0] get_dram_ba(input [`AXI_ADDR_WIDTH-1:0] addr);
     return 'd0;
 endfunction
 
 function [`DRAM_RA_WIDTH-1:0] get_dram_ra(input [`AXI_ADDR_WIDTH-1:0] addr);
-    return addr[`DRAM_CA_WIDTH+:`DRAM_RA_WIDTH];
+    return addr[(`DRAM_CA_WIDTH+3)+:`DRAM_RA_WIDTH];
 endfunction
 
 function [`DRAM_CA_WIDTH-1:0] get_dram_ca(input [`AXI_ADDR_WIDTH-1:0] addr);
-    return addr[`DRAM_CA_WIDTH-1:0];
+    return addr[`DRAM_CA_WIDTH+2:3];
 endfunction
 
 `endif /* __SAL_DDR_TYPEDEF_SVH__ */
