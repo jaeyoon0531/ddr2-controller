@@ -52,9 +52,10 @@ module ddr2_dimm (
                                1'b0,    // DLL reset
                                1'b0,    // normal
                                3'd5,    // CAS latency=5
-                               1'b0,    // interleaved
+                               1'b0,    // sequential 
                                3'd2},   // BL4
-                              'h0, 'h0, 'h0
+                              'h400,    // DQS# Disable
+                              'h0, 'h0
                               );
         end
     end
