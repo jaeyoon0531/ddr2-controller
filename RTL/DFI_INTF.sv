@@ -135,11 +135,11 @@ interface SCHED_IF
 
     // synthesizable, for design
     modport SRC (
-        output                  act_req, rd_req, wr_req, pre_req, ref_req, ba, addr,
+        output                  act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca,
         input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
     modport DST (
-        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, addr,
+        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca,
         output                  act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
 endinterface
