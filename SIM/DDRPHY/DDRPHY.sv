@@ -1,4 +1,5 @@
 `include "TIME_SCALE.svh"
+`include "SAL_DDR_PARAMS.svh"
 
 module DDRPHY
 (
@@ -51,6 +52,7 @@ module DDRPHY
     logic                           rden_neg_d;
     always_ff @(negedge clk) begin  // NEGedge
         rden_neg_d                  <= dfi_rd_if.rddata_en;
+    end
 
     logic                           clean_rdqs;
     assign  clean_rdqs              = dqs[0] & rden_neg_d;
@@ -71,11 +73,11 @@ module DDRPHY
     logic   [1:0]                   rden_shift_reg;
     always_ff @(posedge clk)
         if (~rst_n)
-            rden_shift_reg          <= 2'd0;
+            rden_shift_reg          <= 'd0;
         else
             rden_shift_reg          <= {rden_shift_reg[0], dfi_rd_if.rddata_en};
 
-    assign  dfi_rd_if.rddata_valid  = rden_shift_reg[1];
+    assign  dfi_rd_if.rddata_valid  = rden_shift_reg[0];
     assign  dfi_rd_if.rddata        = {rdata_posedge, rdata_negedge};
 
 endmodule

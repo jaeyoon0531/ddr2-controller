@@ -26,7 +26,7 @@ module SAL_DDR_CTRL
     BK_TIMING_IF                bk_timing_if                    ();
     SCHED_TIMING_IF             sched_timing_if                 ();
     BK_REQ_IF                   bk_req_if_arr[`DRAM_BK_CNT]     (.clk(clk), .rst_n(rst_n));
-    BK_SCHED_IF                 bk_sched_if_arr[`DRAM_BK_CNT]   (.clk(clk), .rst_n(rst_n));
+    //SCHED_IF                    bk_sched_if_arr[`DRAM_BK_CNT]   (.clk(clk), .rst_n(rst_n));
     SCHED_IF                    sched_if                        (.clk(clk), .rst_n(rst_n));
 
     SAL_CFG                         u_cfg

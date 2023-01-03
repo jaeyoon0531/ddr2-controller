@@ -93,35 +93,36 @@ interface BK_REQ_IF
 endinterface
 
 interface BK_TIMING_IF ();
-    logic   [`T_RCD_WIDTH-1:0]  t_rcd;
-    logic   [`T_RP_WIDTH-1:0]   t_rp;
-    logic   [`T_RAS_WIDTH-1:0]  t_ras;
-    logic   [`T_RFC_WIDTH-1:0]  t_rfc;
-    logic   [`T_RTP_WIDTH-1:0]  t_rtp;
-    logic   [`T_WTP_WIDTH-1:0]  t_wtp;
+    logic   [`T_RCD_WIDTH-1:0]  t_rcd_m1;
+    logic   [`T_RP_WIDTH-1:0]   t_rp_m1;
+    logic   [`T_RAS_WIDTH-1:0]  t_ras_m1;
+    logic   [`T_RFC_WIDTH-1:0]  t_rfc_m1;
+    logic   [`T_RTP_WIDTH-1:0]  t_rtp_m1;
+    logic   [`T_WTP_WIDTH-1:0]  t_wtp_m1;
 
     // synthesizable, for design
     modport SRC (
-        output                  t_rcd, t_rp, t_ras, t_rfc, t_rtp, t_wtp
+        output                  t_rcd_m1, t_rp_m1, t_ras_m1, t_rfc_m1, t_rtp_m1, t_wtp_m1
     );
     modport MON (
-        input                   t_rcd, t_rp, t_ras, t_rfc, t_rtp, t_wtp
+        input                   t_rcd_m1, t_rp_m1, t_ras_m1, t_rfc_m1, t_rtp_m1, t_wtp_m1
     );
 endinterface
 
 interface SCHED_TIMING_IF ();
-    logic   [`T_RRD_WIDTH-1:0]  t_rrd;
-    logic   [`T_CCD_WIDTH-1:0]  t_ccd;
-    logic   [`T_WTR_WIDTH-1:0]  t_wtr;
-    logic   [`T_RTW_WIDTH-1:0]  t_rtw;
+    logic   [`T_RRD_WIDTH-1:0]  t_rrd_m1;
+    logic   [`T_CCD_WIDTH-1:0]  t_ccd_m1;
+    logic   [`T_WTR_WIDTH-1:0]  t_wtr_m1;
+    logic   [`T_RTW_WIDTH-1:0]  t_rtw_m1;
+    logic   [3:0]               dfi_wren_lat;
     logic   [3:0]               dfi_rden_lat;
 
     // synthesizable, for design
     modport SRC (
-        output                  t_rrd, t_ccd, t_wtr, t_rtw, dfi_rden_lat
+        output                  t_rrd_m1, t_ccd_m1, t_wtr_m1, t_rtw_m1, dfi_wren_lat, dfi_rden_lat
     );
     modport MON (
-        input                   t_rrd, t_ccd, t_wtr, t_rtw, dfi_rden_lat
+        input                   t_rrd_m1, t_ccd_m1, t_wtr_m1, t_rtw_m1, dfi_wren_lat, dfi_rden_lat
     );
 endinterface
 
