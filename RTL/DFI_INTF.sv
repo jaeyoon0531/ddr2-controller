@@ -32,7 +32,7 @@ interface DFI_WR_IF
     input                       rst_n
 );
     logic                       wrdata_en;
-    logic   [63:0]              wrdata;
+    logic   [127:0]             wrdata;
     logic   [7:0]               wrdata_mask;
 
     // synthesizable, for design
@@ -50,11 +50,21 @@ interface DFI_RD_IF
     input                       clk,
     input                       rst_n
 );
+    logic                       rddata_en;
+    logic   [127:0]             rddata;
+    logic                       rddata_valid;
+    logic   [7:0]               rddata_dnv;
+
+
     // synthesizable, for design
     modport                     SRC (
+        output                      rddata, rddata_valid, rddata_dnv,
+        input                       rddata_en
     );
 
     modport                     DST (
+        input                       rddata, rddata_valid, rddata_dnv,
+        output                      rddata_en
     );
 endinterface
 
@@ -94,7 +104,7 @@ interface BK_TIMING_IF ();
     modport SRC (
         output                  t_rcd, t_rp, t_ras, t_rfc, t_rtp, t_wtp
     );
-    modport DST (
+    modport MON (
         input                   t_rcd, t_rp, t_ras, t_rfc, t_rtp, t_wtp
     );
 endinterface
@@ -104,13 +114,14 @@ interface SCHED_TIMING_IF ();
     logic   [`T_CCD_WIDTH-1:0]  t_ccd;
     logic   [`T_WTR_WIDTH-1:0]  t_wtr;
     logic   [`T_RTW_WIDTH-1:0]  t_rtw;
+    logic   [3:0]               dfi_rden_lat;
 
     // synthesizable, for design
     modport SRC (
-        output                  t_rrd, t_ccd, t_wtr, t_rtw
+        output                  t_rrd, t_ccd, t_wtr, t_rtw, dfi_rden_lat
     );
-    modport DST (
-        input                   t_rrd, t_ccd, t_wtr, t_rtw
+    modport MON (
+        input                   t_rrd, t_ccd, t_wtr, t_rtw, dfi_rden_lat
     );
 endinterface
 
@@ -135,12 +146,16 @@ interface SCHED_IF
 
     // synthesizable, for design
     modport SRC (
-        output                  act_req, rd_req, wr_req, pre_req, ref_req, ba, addr,
+        output                  act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca,
         input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
     modport DST (
-        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, addr,
+        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca,
         output                  act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
+    );
+    modport MON (
+        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca,
+        input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
 endinterface
 

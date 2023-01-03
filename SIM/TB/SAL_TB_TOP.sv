@@ -144,10 +144,10 @@ module SAL_TB_TOP;
         .rdqs_n                     (ddr_rdqs_n)
     );
 
-    wire        [`AXI_ID_WIDTH-1:0]             rid;
-    wire        [`AXI_DATA_WIDTH-1:0]           rid;
-    wire        [1:0]                           rresp;
-    wire                                        rlast;
+    logic       [`AXI_ID_WIDTH-1:0]             rid;
+    logic       [`AXI_DATA_WIDTH-1:0]           rdata;
+    logic       [1:0]                           rresp;
+    logic                                       rlast;
 
     initial begin
         axi_aw_if.init();

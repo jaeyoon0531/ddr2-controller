@@ -10,8 +10,11 @@ module SAL_BK_CTRL
     // request from the address decoder
     BK_REQ_IF.DST               bk_req_if,
     // timing parameters
-    BK_TIMING_IF.DST            bk_timing_if,
-    SCHED_TIMING_IF.DST         sched_timing_if,
+    BK_TIMING_IF.MON            bk_timing_if,
+    SCHED_TIMING_IF.MON         sched_timing_if,
+    // scheduling interface
+    SCHED_IF.SRC                sched_if,
+
     // request to DDR PHY
     DFI_CTRL_IF.SRC             dfi_ctrl_if,
 
@@ -27,8 +30,6 @@ module SAL_BK_CTRL
     logic                       state,              state_n;                        
     // current row address                                            
     logic   [`DRAM_RA_WIDTH-1:0]cur_ra,             cur_ra_n;
-
-    SCHED_IF                    sched_if    (.clk(clk), .rst_n(rst_n));
 
     wire                        is_t_rcd_met,
                                 is_t_rp_met,

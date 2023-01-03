@@ -23,10 +23,11 @@ module SAL_DDR_CTRL
     DFI_RD_IF.DST               dfi_rd_if
 );
 
-    BK_REQ_IF                   bk_req_if_arr[`DRAM_BK_CNT] (.*);
-    BK_SCHED_IF                 bk_sched_if_arr[`DRAM_BK_CNT] (.*);
-    BK_TIMING_IF                bk_timing_if (.*);
-    SCHED_TIMING_IF             sched_timing_if (.*);
+    BK_TIMING_IF                bk_timing_if                    ();
+    SCHED_TIMING_IF             sched_timing_if                 ();
+    BK_REQ_IF                   bk_req_if_arr[`DRAM_BK_CNT]     (.clk(clk), .rst_n(rst_n));
+    BK_SCHED_IF                 bk_sched_if_arr[`DRAM_BK_CNT]   (.clk(clk), .rst_n(rst_n));
+    SCHED_IF                    sched_if                        (.clk(clk), .rst_n(rst_n));
 
     SAL_CFG                         u_cfg
     (
@@ -48,7 +49,7 @@ module SAL_DDR_CTRL
         .bk_req_if_arr              (bk_req_if_arr)
     );
 
-    SAL_BK_CTRL                 u_bank_ctrl
+    SAL_BK_CTRL                     u_bank_ctrl
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
@@ -56,10 +57,22 @@ module SAL_DDR_CTRL
         .bk_req_if                  (bk_req_if_arr[0]),
         .bk_timing_if               (bk_timing_if),
         .sched_timing_if            (sched_timing_if),
+        .sched_if                   (sched_if),
         .dfi_ctrl_if                (dfi_ctrl_if),
 
         .ref_req_i                  (1'b0),
         .ref_gnt_o                  ()
+    );
+
+    SAL_RD_CTRL                     u_rd_ctrl
+    (
+        .clk                        (clk),
+        .rst_n                      (rst_n),
+
+        .sched_timing_if            (sched_timing_if),
+        .sched_if                   (sched_if),
+        .dfi_rd_if                  (dfi_rd_if),
+        .axi_r_if                   (axi_r_if)
     );
     /*
     genvar geni;
