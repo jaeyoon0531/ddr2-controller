@@ -195,15 +195,14 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[7]),
             .rdqs_n                     (rdqs_n[7])
         );
-    
-    
-    
-    
-    
+        
+     
+
+
 
         initial begin
             repeat (5) @(posedge ck);
-            u_dram.initialize({1'b0,    // reserved
+            u_dram0.initialize({1'b0,    // reserved
                                1'd0,    // fast exit
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
@@ -214,7 +213,103 @@ module ddr2_dimm (
                               'h0, 'h0, 'h0
                               );
         end
-    end
-    endgenerate
+        
+        initial begin
+            repeat (5) @(posedge ck);
+            u_dram1.initialize({1'b0,    // reserved
+                               1'd0,    // fast exit
+                               3'd5,    // write recover=6
+                               1'b0,    // DLL reset
+                               1'b0,    // normal
+                               3'd5,    // CAS latency=5
+                               1'b0,    // interleaved
+                               3'd2},   // BL4
+                              'h0, 'h0, 'h0
+                              );
+        end
+        
+        initial begin
+            repeat (5) @(posedge ck);
+            u_dram2.initialize({1'b0,    // reserved
+                               1'd0,    // fast exit
+                               3'd5,    // write recover=6
+                               1'b0,    // DLL reset
+                               1'b0,    // normal
+                               3'd5,    // CAS latency=5
+                               1'b0,    // interleaved
+                               3'd2},   // BL4
+                              'h0, 'h0, 'h0
+                              );
+        end
+        
+        initial begin
+            repeat (5) @(posedge ck);
+            u_dram3.initialize({1'b0,    // reserved
+                               1'd0,    // fast exit
+                               3'd5,    // write recover=6
+                               1'b0,    // DLL reset
+                               1'b0,    // normal
+                               3'd5,    // CAS latency=5
+                               1'b0,    // interleaved
+                               3'd2},   // BL4
+                              'h0, 'h0, 'h0
+                              );
+        end
+        
+        initial begin
+            repeat (5) @(posedge ck);
+            u_dram4.initialize({1'b0,    // reserved
+                               1'd0,    // fast exit
+                               3'd5,    // write recover=6
+                               1'b0,    // DLL reset
+                               1'b0,    // normal
+                               3'd5,    // CAS latency=5
+                               1'b0,    // interleaved
+                               3'd2},   // BL4
+                              'h0, 'h0, 'h0
+                              );
+        end
+        
+        initial begin
+            repeat (5) @(posedge ck);
+            u_dram5.initialize({1'b0,    // reserved
+                               1'd0,    // fast exit
+                               3'd5,    // write recover=6
+                               1'b0,    // DLL reset
+                               1'b0,    // normal
+                               3'd5,    // CAS latency=5
+                               1'b0,    // interleaved
+                               3'd2},   // BL4
+                              'h0, 'h0, 'h0
+                              );
+        end
+        
+        initial begin
+            repeat (5) @(posedge ck);
+            u_dram6.initialize({1'b0,    // reserved
+                               1'd0,    // fast exit
+                               3'd5,    // write recover=6
+                               1'b0,    // DLL reset
+                               1'b0,    // normal
+                               3'd5,    // CAS latency=5
+                               1'b0,    // interleaved
+                               3'd2},   // BL4
+                              'h0, 'h0, 'h0
+                              );
+        end
+        
+        initial begin
+            repeat (5) @(posedge ck);
+            u_dram7.initialize({1'b0,    // reserved
+                               1'd0,    // fast exit
+                               3'd5,    // write recover=6
+                               1'b0,    // DLL reset
+                               1'b0,    // normal
+                               3'd5,    // CAS latency=5
+                               1'b0,    // interleaved
+                               3'd2},   // BL4
+                              'h0, 'h0, 'h0
+                              );
+        end
 
 endmodule
