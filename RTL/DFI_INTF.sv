@@ -33,7 +33,7 @@ interface DFI_WR_IF
 );
     logic                       wrdata_en;
     logic   [127:0]             wrdata;
-    logic   [7:0]               wrdata_mask;
+    logic   [15:0]              wrdata_mask;
 
     // synthesizable, for design
     modport                     SRC (
@@ -53,7 +53,7 @@ interface DFI_RD_IF
     logic                       rddata_en;
     logic   [127:0]             rddata;
     logic                       rddata_valid;
-    logic   [7:0]               rddata_dnv;
+    logic   [15:0]              rddata_dnv;
 
 
     // synthesizable, for design

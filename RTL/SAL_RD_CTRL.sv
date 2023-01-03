@@ -37,7 +37,7 @@ module SAL_RD_CTRL
     SAL_FIFO
     #(
         .DEPTH_LG2                      (4),
-        .DATA_WIDTH                     (128)
+        .DATA_WIDTH                     (`AXI_ID_WIDTH)
     )
     rid_fifo
     (

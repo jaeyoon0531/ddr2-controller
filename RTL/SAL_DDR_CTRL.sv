@@ -64,6 +64,19 @@ module SAL_DDR_CTRL
         .ref_gnt_o                  ()
     );
 
+    SAL_WR_CTRL                     u_wr_ctrl
+    (
+        .clk                        (clk),
+        .rst_n                      (rst_n),
+
+        .sched_timing_if            (sched_timing_if),
+        .sched_if                   (sched_if),
+
+        .axi_w_if                   (axi_w_if),
+        .axi_b_if                   (axi_b_if),
+        .dfi_wr_if                  (dfi_wr_if)
+    );
+
     SAL_RD_CTRL                     u_rd_ctrl
     (
         .clk                        (clk),
