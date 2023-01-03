@@ -144,6 +144,11 @@ module SAL_TB_TOP;
         .rdqs_n                     (ddr_rdqs_n)
     );
 
+    wire        [`AXI_ID_WIDTH-1:0]             rid;
+    wire        [`AXI_DATA_WIDTH-1:0]           rid;
+    wire        [1:0]                           rresp;
+    wire                                        rlast;
+
     initial begin
         axi_aw_if.init();
         axi_ar_if.init();
@@ -156,6 +161,11 @@ module SAL_TB_TOP;
 
         axi_ar_if.transfer('d0, 'd0, 'd0, 'd0, 'd0);
         axi_ar_if.transfer('d0, 'd4, 'd0, 'd0, 'd0);
+
+        axi_r_if.receive(rid, rdata, rresp, rlast);
+        axi_r_if.receive(rid, rdata, rresp, rlast);
+        axi_r_if.receive(rid, rdata, rresp, rlast);
+        axi_r_if.receive(rid, rdata, rresp, rlast);
 
         repeat (50) @(posedge clk);
         $finish;

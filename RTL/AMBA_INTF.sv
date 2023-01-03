@@ -327,6 +327,22 @@ interface AXI_R_IF
         SRC_CB.rresp                <= 'hx;
         SRC_CB.rlast                <= 'hx;
     endtask
+
+    task receive (  output  [ID_WIDTH-1:0]      id,
+                    output  [DATA_WIDTH-1:0]    data,
+                    output  [1:0]               resp,
+                    output                      last);
+        DST_CB.rready               <= 1'b1;
+        @(posedge clk);
+        while (rvalid!=1'b1) begin
+            @(posedge clk);
+        end
+        id                          = rid;
+        data                        = rdata;
+        resp                        = rresp;
+        last                        = rlast;
+        DST_CB.rready               <= 1'b0;
+    endtask
     // synthesis translate_on
 endinterface
 
