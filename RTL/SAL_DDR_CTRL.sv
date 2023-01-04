@@ -31,6 +31,8 @@ module SAL_DDR_CTRL
     // scheduling output
     SCHED_IF                    sched_if();
 
+    AXI_A_IF                    axi_aw_internal_if (.clk(clk), .rst_n(rst_n));
+
     // Configurations
     SAL_CFG                         u_cfg
     (
@@ -42,14 +44,29 @@ module SAL_DDR_CTRL
         .timing_if                  (timing_if)
     );
 
+    SAL_WR_CTRL                     u_wr_ctrl
+    (
+        .clk                        (clk),
+        .rst_n                      (rst_n),
+
+        .timing_if                  (timing_if),
+        .sched_if                   (sched_if),
+
+        .axi_aw_if                  (axi_aw_if),
+        .axi_w_if                   (axi_w_if),
+        .axi_b_if                   (axi_b_if),
+
+        .axi_aw2_if                 (axi_aw_internal_if),
+        .dfi_wr_if                  (dfi_wr_if)
+    );
+
     SAL_ADDR_DECODER                u_decoder
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
 
         .axi_ar_if                  (axi_ar_if),
-        .axi_aw_if                  (axi_aw_if),
-        .axi_w_if                   (axi_w_if),
+        .axi_aw_if                  (axi_aw_internal_if),
 
         .bk_req_if                  (bk_req_if)
     );
@@ -75,19 +92,6 @@ module SAL_DDR_CTRL
 
         .sched_if                   (sched_if),
         .dfi_ctrl_if                (dfi_ctrl_if)
-    );
-
-    SAL_WR_CTRL                     u_wr_ctrl
-    (
-        .clk                        (clk),
-        .rst_n                      (rst_n),
-
-        .timing_if                  (timing_if),
-        .sched_if                   (sched_if),
-
-        .axi_w_if                   (axi_w_if),
-        .axi_b_if                   (axi_b_if),
-        .dfi_wr_if                  (dfi_wr_if)
     );
 
     SAL_RD_CTRL                     u_rd_ctrl
