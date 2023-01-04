@@ -104,35 +104,5 @@ module SAL_DDR_CTRL
         .dfi_rd_if                  (dfi_rd_if),
         .axi_r_if                   (axi_r_if)
     );
-    /*
-    genvar geni;
-
-    generate
-    for (geni=0; geni<`DRAM_BK_CNT; geni=geni+1) begin: bk_ctrl
-        SAL_BK_CTRL                 u_bank_ctrl
-        (
-            .clk                        (clk),
-            .rst_n                      (rst_n),
-
-            .bk_req_if                  (bk_req_if_arr[geni]),
-            .bk_timing_if               (bk_timing_if),
-            .sched_timing_if            (sched_timing_if),
-            .dfi_ctrl_if                (dfi_ctrl_if),
-
-            .ref_req_i                  (1'b0),
-            .ref_gnt_o                  ()
-        );
-    end
-    endgenerate
-
-    SAL_SCHED                   u_sched
-    (
-        .clk                        (clk),
-        .rst_n                      (rst_n),
-
-        .bk_sched_if                (bk_sched_if_arr),
-        .dfi_ctrl_if                (dfi_ctrl_if)
-    );
-    */
 
 endmodule // SAL_DDR_CTRL
