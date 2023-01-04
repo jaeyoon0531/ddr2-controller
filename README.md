@@ -1,1 +1,1 @@
-# ddr2-controller
+# DDR2-controller
