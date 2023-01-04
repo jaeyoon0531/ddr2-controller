@@ -96,6 +96,8 @@ module SAL_BK_CTRL
                                 sched_if.wr_gnt             = 1'b1;
                                 sched_if.ca                 = bk_req_if.ca;
                                 sched_if.id                 = bk_req_if.id;
+
+                                bk_req_if.ready             = 1'b1;
                             end
                         end
                         else begin
@@ -104,8 +106,9 @@ module SAL_BK_CTRL
                                 sched_if.rd_gnt             = 1'b1;
                                 sched_if.ca                 = bk_req_if.ca;
                                 sched_if.id                 = bk_req_if.id;
+
+                                bk_req_if.ready             = 1'b1;
                             end
-                            bk_req_if.ready             = 1'b1;
                         end
                     end
                     else begin  // bank miss

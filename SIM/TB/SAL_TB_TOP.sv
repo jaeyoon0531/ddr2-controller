@@ -171,7 +171,7 @@ module SAL_TB_TOP;
         data = {8{32'h01234567}};       // 256-bit
         fork
             begin
-                axi_aw_if.transfer(id, addr, 'd0, 'd0, 'd0);
+                axi_aw_if.transfer(id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
             end
             begin
                 axi_w_if.transfer(id, data[127:0], 16'hFFFF, 1'b0);
@@ -184,7 +184,7 @@ module SAL_TB_TOP;
             end
         join
 
-        axi_ar_if.transfer('d0, addr, 'd0, 'd0, 'd0);
+        axi_ar_if.transfer(id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
         axi_r_if.receive(rid, rdata, rresp, rlast);
         axi_r_if.receive(rid, rdata, rresp, rlast);
 

@@ -50,7 +50,7 @@ module SAL_RD_CTRL
 
         .empty_o                        (/* NC */),
         .aempty_o                       (/* NC */),
-        .rden_i                         (axi_r_if.rvalid & axi_r_if.rready),
+        .rden_i                         (axi_r_if.rvalid & axi_r_if.rready & axi_r_if.rlast),
         .rdata_o                        (axi_r_if.rid)
     );
 

@@ -92,7 +92,7 @@ module SAL_FIFO #(
     // synthesis translate_off
     always @(posedge clk) begin
         if (full_o & wren_i) begin
-            $display("FIFO overflow");
+            $display("@%t FIFO %m overflow", $time);
             @(posedge clk);
             $finish;
         end
@@ -100,7 +100,7 @@ module SAL_FIFO #(
 
     always @(posedge clk) begin
         if (empty_o & rden_i) begin
-            $display("FIFO underflow");
+            $display("@%t FIFO %m underflow", $time);
             @(posedge clk);
             $finish;
         end
