@@ -15,7 +15,7 @@ module SAL_TB_TOP;
 
     // reset generation
     initial begin
-        // activate the reset (active low)            
+        // activate the reset (active low)
         rst_n                       = 1'b0;
         repeat (3) @(posedge clk);
         // release the reset after 10 cycles
@@ -149,6 +149,9 @@ module SAL_TB_TOP;
     logic       [1:0]                           rresp;
     logic                                       rlast;
 
+    logic       [`AXI_ID_WIDTH-1:0]             id;
+    logic       [`AXI_ADDR_WIDTH-1:0]           addr;
+
     initial begin
         axi_aw_if.init();
         axi_w_if.init();
@@ -162,6 +165,14 @@ module SAL_TB_TOP;
         // wait enough cycles for DRAM to finish their initialization
         repeat (250) @(posedge clk);
 
+        id = 'd0;
+        addr = 'd0;
+        axi_aw_if.transfer(id, 'd0, 'd0, 'd0, 'd0);
+        axi_w_if.transfer(id, {4{32'h01234567}}, 16'hFFFF, 1'b0);
+        axi_w_if.transfer(id, {4{32'h01234567}}, 16'hFFFF, 1'b1);
+
+        //axi_w_if.transfer(id, {4{32'h01234567}}, 16'hFFFF, 1'b0);
+        //axi_w_if.transfer(id, {4{32'h01234567}}, 16'hFFFF, 1'b0);
         axi_ar_if.transfer('d0, 'd0, 'd0, 'd0, 'd0);
         axi_ar_if.transfer('d0, 'd4, 'd0, 'd0, 'd0);
 
