@@ -65,11 +65,11 @@ interface AXI_A_IF
         aburst                      = 'hx;
     endfunction
 
-    task transfer(  input   [ID_WIDTH-1:0]      id,
-                    input   [ADDR_WIDTH-1:0]    addr,
-                    input   [ADDR_LEN-1:0]      len,
-                    input   [2:0]               size,
-                    input   [1:0]               burst);
+    task automatic transfer(  input   [ID_WIDTH-1:0]      id,
+                              input   [ADDR_WIDTH-1:0]    addr,
+                              input   [ADDR_LEN-1:0]      len,
+                              input   [2:0]               size,
+                              input   [1:0]               burst);
         SRC_CB.avalid               <= 1'b1;
         SRC_CB.aid                  <= id;
         SRC_CB.aaddr                <= addr;
@@ -156,7 +156,7 @@ interface AXI_W_IF
         wlast                       = 'hx;
     endfunction
 
-    task transfer(  input   [ID_WIDTH-1:0]      id,
+    task automatic transfer(  input   [ID_WIDTH-1:0]      id,
                     input   [DATA_WIDTH-1:0]    data,
                     input   [DATA_WIDTH/8-1:0]  strb,
                     input                       last);
@@ -237,7 +237,7 @@ interface AXI_B_IF
         */
     endfunction
 
-    task receive(   output  [ID_WIDTH-1:0]      id,
+    task automatic receive(   output  [ID_WIDTH-1:0]      id,
                     output  [1:0]               resp);
         DST_CB.bready               <= 1'b1;
         @(posedge clk);
@@ -317,7 +317,7 @@ interface AXI_R_IF
         */
     endfunction
 
-    task transfer(  input   [ID_WIDTH-1:0]      id,
+    task automatic transfer(  input   [ID_WIDTH-1:0]      id,
                     input   [DATA_WIDTH-1:0]    data,
                     input   [1:0]               resp,
                     input                       last);
@@ -337,7 +337,7 @@ interface AXI_R_IF
         SRC_CB.rlast                <= 'hx;
     endtask
 
-    task receive (  output  [ID_WIDTH-1:0]      id,
+    task automatic receive (  output  [ID_WIDTH-1:0]      id,
                     output  [DATA_WIDTH-1:0]    data,
                     output  [1:0]               resp,
                     output                      last);
@@ -413,7 +413,7 @@ interface APB_IF (
         pwdata                      = 'hx;
     endtask
 
-    task write(input    [31:0]  addr,
+    task automatic write(input    [31:0]  addr,
                input    [31:0]  data);
         SRC_CB.psel                 <= 1'b1;
         SRC_CB.penable              <= 1'b0;
@@ -435,7 +435,7 @@ interface APB_IF (
         SRC_CB.pwdata               <= 'hx;
     endtask
 
-    task read(input     [31:0]  addr,
+    task automatic read(input     [31:0]  addr,
               output    [31:0]  data);
         SRC_CB.psel                 <= 1'b1;
         SRC_CB.penable              <= 1'b0;

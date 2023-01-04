@@ -144,16 +144,7 @@ module SAL_TB_TOP;
         .rdqs_n                     (ddr_rdqs_n)
     );
 
-    logic       [`AXI_ID_WIDTH-1:0]             rid;
-    logic       [`AXI_DATA_WIDTH-1:0]           rdata;
-    logic       [1:0]                           rresp;
-    logic                                       rlast;
-
-    logic       [`AXI_ID_WIDTH-1:0]             id;
-    logic       [`AXI_ADDR_WIDTH-1:0]           addr;
-    logic       [255:0]                         data;
-
-    initial begin
+    task init();
         axi_aw_if.init();
         axi_w_if.init();
         axi_b_if.init();
@@ -165,30 +156,72 @@ module SAL_TB_TOP;
 
         // wait enough cycles for DRAM to finish their initialization
         repeat (250) @(posedge clk);
+    endtask
 
-        id = 'd0;
-        addr = 'd0;
-        data = {8{32'h01234567}};       // 256-bit
+    logic       [`AXI_ID_WIDTH-1:0]     simple_id;
+    assign  simple_id                   = 'd0;
+
+    task automatic write32B(
+        input [`AXI_ADDR_WIDTH-1:0] addr,
+        input [255:0]               data
+    );
+        logic   [`AXI_ID_WIDTH-1:0] rid;
+        logic   [1:0]               rresp;
+
+        // drive to AW and W
         fork
             begin
-                axi_aw_if.transfer(id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
+                axi_aw_if.transfer(simple_id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
             end
             begin
-                axi_w_if.transfer(id, data[127:0], 16'hFFFF, 1'b0);
-                axi_w_if.transfer(id, data[255:128], 16'hFFFF, 1'b1);
-            end
-            begin
-                axi_b_if.receive(rid, rresp);
-                if (rid!=id) begin $display("ID mismatch (expected: %d, received: %d)", id, rid); $finish; end
-                if (rresp!==2'b00) begin $display("Non-OK response (received: %d)", rresp); $finish; end
+                axi_w_if.transfer(simple_id, data[127:0], 16'hFFFF, 1'b0);
+                axi_w_if.transfer(simple_id, data[255:128], 16'hFFFF, 1'b1);
             end
         join
 
-        axi_ar_if.transfer(id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
-        axi_r_if.receive(rid, rdata, rresp, rlast);
-        axi_r_if.receive(rid, rdata, rresp, rlast);
+        // receive from B
+        axi_b_if.receive(rid, rresp);
 
-        repeat (50) @(posedge clk);
+        // check responses
+        if (rid!==simple_id) begin $display("ID mismatch (expected: %d, received: %d)", simple_id, rid); $finish; end
+        if (rresp!==2'b00) begin $display("Non-OK response (received: %d)", rresp); $finish; end
+    endtask
+
+    task automatic read32B(
+        input [`AXI_ADDR_WIDTH-1:0] addr,
+        output [255:0]              data
+    );
+        logic   [`AXI_ID_WIDTH-1:0] rid;
+        logic   [1:0]               rresp;
+        logic                       rlast;
+
+        // drive to AR
+        axi_ar_if.transfer(simple_id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
+
+        // receive from R
+        axi_r_if.receive(rid, data, rresp, rlast);
+        if (rlast!==1'b0) begin $display("RLAST mismatch (expected: %d, received: %d)", 0, rlast); $finish; end
+        if (rid!==simple_id) begin $display("ID mismatch (expected: %d, received: %d)", simple_id, rid); $finish; end
+        if (rresp!==2'b00) begin $display("Non-OK response (received: %d)", rresp); $finish; end
+
+        axi_r_if.receive(rid, data, rresp, rlast);
+        if (rlast!==1'b1) begin $display("RLAST mismatch (expected: %d, received: %d)", 1, rlast); $finish; end
+        if (rid!==simple_id) begin $display("ID mismatch (expected: %d, received: %d)", simple_id, rid); $finish; end
+        if (rresp!==2'b00) begin $display("Non-OK response (received: %d)", rresp); $finish; end
+    endtask
+
+
+    logic   [255:0]             data;
+    initial begin
+        init();
+
+        write32B('d0,   {8{32'h01234567}});
+        write32B('d32,  {8{32'h01234567}});
+        read32B('d0, data);
+        read32B('d32, data);
+
+        repeat (30) @(posedge clk);
+
         $finish;
     end
 
