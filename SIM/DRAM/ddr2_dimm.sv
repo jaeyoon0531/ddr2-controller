@@ -19,8 +19,6 @@ module ddr2_dimm (
     inout   wire    [7:0]       dm_rdqs
 );
 
-    
-    
     ddr2_model                      u_dram0
         (
             // command and address
@@ -42,7 +40,7 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[0]),
             .rdqs_n                     (rdqs_n[0])
         );
-        
+
         ddr2_model                      u_dram1
         (
             // command and address
@@ -64,7 +62,7 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[1]),
             .rdqs_n                     (rdqs_n[1])
         );
-        
+
         ddr2_model                      u_dram2
         (
             // command and address
@@ -86,7 +84,7 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[2]),
             .rdqs_n                     (rdqs_n[2])
         );
-        
+
         ddr2_model                      u_dram3
         (
             // command and address
@@ -108,7 +106,7 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[3]),
             .rdqs_n                     (rdqs_n[3])
         );
-        
+
         ddr2_model                      u_dram4
         (
             // command and address
@@ -130,7 +128,7 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[4]),
             .rdqs_n                     (rdqs_n[4])
         );
-        
+
         ddr2_model                      u_dram5
         (
             // command and address
@@ -152,7 +150,7 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[5]),
             .rdqs_n                     (rdqs_n[5])
         );
-        
+
         ddr2_model                      u_dram6
         (
             // command and address
@@ -174,7 +172,7 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[6]),
             .rdqs_n                     (rdqs_n[6])
         );
-        
+
         ddr2_model                      u_dram7
         (
             // command and address
@@ -196,9 +194,6 @@ module ddr2_dimm (
             .dm_rdqs                    (dm_rdqs[7]),
             .rdqs_n                     (rdqs_n[7])
         );
-        
-     
-
 
 
         initial begin
@@ -208,106 +203,78 @@ module ddr2_dimm (
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
-                               3'd5,    // CAS latency=5
+                               3'd`CAS_LATENCY,    // CAS latency=5
                                1'b0,    // interleaved
                                3'd2},   // BL4
                               'h0, 'h0, 'h0
                               );
-        end
-        
-        initial begin
-            repeat (5) @(posedge ck);
             u_dram1.initialize({1'b0,    // reserved
                                1'd0,    // fast exit
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
-                               3'd5,    // CAS latency=5
+                               3'd`CAS_LATENCY,    // CAS latency=5
                                1'b0,    // interleaved
                                3'd2},   // BL4
                               'h0, 'h0, 'h0
                               );
-        end
-        
-        initial begin
-            repeat (5) @(posedge ck);
             u_dram2.initialize({1'b0,    // reserved
                                1'd0,    // fast exit
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
-                               3'd5,    // CAS latency=5
+                               3'd`CAS_LATENCY,    // CAS latency=5
                                1'b0,    // interleaved
                                3'd2},   // BL4
                               'h0, 'h0, 'h0
                               );
-        end
-        
-        initial begin
-            repeat (5) @(posedge ck);
             u_dram3.initialize({1'b0,    // reserved
                                1'd0,    // fast exit
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
-                               3'd5,    // CAS latency=5
+                               3'd`CAS_LATENCY,    // CAS latency=5
                                1'b0,    // interleaved
                                3'd2},   // BL4
                               'h0, 'h0, 'h0
                               );
-        end
-        
-        initial begin
-            repeat (5) @(posedge ck);
             u_dram4.initialize({1'b0,    // reserved
                                1'd0,    // fast exit
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
-                               3'd5,    // CAS latency=5
+                               3'd`CAS_LATENCY,    // CAS latency=5
                                1'b0,    // interleaved
                                3'd2},   // BL4
                               'h0, 'h0, 'h0
                               );
-        end
-        
-        initial begin
-            repeat (5) @(posedge ck);
             u_dram5.initialize({1'b0,    // reserved
                                1'd0,    // fast exit
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
-                               3'd5,    // CAS latency=5
+                               3'd`CAS_LATENCY,    // CAS latency=5
                                1'b0,    // interleaved
                                3'd2},   // BL4
                               'h0, 'h0, 'h0
                               );
-        end
-        
-        initial begin
-            repeat (5) @(posedge ck);
             u_dram6.initialize({1'b0,    // reserved
                                1'd0,    // fast exit
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
-                               3'd5,    // CAS latency=5
+                               3'd`CAS_LATENCY,    // CAS latency=5
                                1'b0,    // interleaved
                                3'd2},   // BL4
                               'h0, 'h0, 'h0
                               );
-        end
-        
-        initial begin
-            repeat (5) @(posedge ck);
             u_dram7.initialize({1'b0,    // reserved
                                1'd0,    // fast exit
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
                                3'd`CAS_LATENCY,// CAS latency=5
-                               1'b0,    // sequential 
+                               1'b0,    // sequential
                                3'd2},   // BL4
                               'h400,    // DQS# Disable
                               'h0, 'h0

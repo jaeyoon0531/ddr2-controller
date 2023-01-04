@@ -24,8 +24,8 @@ module SAL_BK_CTRL
                                 S_OPEN      = 1'b1;
 
     // current state
-    logic                       state,              state_n;                        
-    // current row address                                            
+    logic                       state,              state_n;
+    // current row address
     logic   [`DRAM_RA_WIDTH-1:0]cur_ra,             cur_ra_n;
 
     wire                        is_t_rcd_met,

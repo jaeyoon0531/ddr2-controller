@@ -67,7 +67,7 @@ module SAL_DDR_CTRL
         .ref_gnt_o                  ()
     );
 
-    SAL_CTRL_ENCODER                u_ctrl_encoder
+    SAL_CTRL_ENCODER                u_encoder
     (
         .clk                        (clk),
         .rst_n                      (rst_n),

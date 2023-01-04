@@ -29,21 +29,21 @@ interface TIMING_IF ();
 endinterface
 
 interface BK_REQ_IF ();
+    logic                       wr;
     logic                       valid;
     logic                       ready;
     logic   [`AXI_ID_WIDTH-1:0] id;
     logic   [`DRAM_RA_WIDTH-1:0]ra;
     logic   [`DRAM_CA_WIDTH-1:0]ca;
     logic   [`AXI_LEN_WIDTH-1:0]      len;
-    logic                       wr;
 
     // synthesizable, for design
     modport SRC (
-        output                  valid, id, ra, ca, len, wr,
+        output                  wr, valid, id, ra, ca, len,
         input                   ready
     );
     modport DST (
-        input                   valid, id, ra, ca, len, wr,
+        input                   wr, valid, id, ra, ca, len,
         output                  ready
     );
 endinterface

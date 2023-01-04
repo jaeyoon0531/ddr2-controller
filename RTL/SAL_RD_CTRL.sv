@@ -32,10 +32,10 @@ module SAL_RD_CTRL
             rden_shift_reg              <= 16'h0;
         end
         else if (sched_if.rd_gnt) begin
-            rden_shift_reg              <= {rden_shift_reg[14:1], 2'b11};                
+            rden_shift_reg              <= {rden_shift_reg[14:1], 2'b11};
         end
         else begin
-            rden_shift_reg              <= {rden_shift_reg[14:0], 1'b0};                
+            rden_shift_reg              <= {rden_shift_reg[14:0], 1'b0};
         end
 
     assign  dfi_rd_if.rddata_en         = rden_shift_reg[timing_if.dfi_rden_lat];
