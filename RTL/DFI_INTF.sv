@@ -78,7 +78,7 @@ interface BK_REQ_IF
     logic   [`AXI_ID_WIDTH-1:0] id;
     logic   [`DRAM_RA_WIDTH-1:0]ra;
     logic   [`DRAM_CA_WIDTH-1:0]ca;
-    logic   [3:0]               len;
+    logic   [`AXI_LEN_WIDTH-1:0]      len;
     logic                       wr;
 
     // synthesizable, for design
@@ -145,18 +145,19 @@ interface SCHED_IF
     logic   [`DRAM_RA_WIDTH-1:0]ra;
     logic   [`DRAM_CA_WIDTH-1:0]ca;
     logic   [`AXI_ID_WIDTH-1:0] id;
+    logic   [`AXI_LEN_WIDTH-1:0]      len;
 
     // synthesizable, for design
     modport SRC (
-        output                  act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id,
+        output                  act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id, len,
         input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
     modport DST (
-        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id,
+        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id, len,
         output                  act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
     modport MON (
-        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id,
+        input                   act_req, rd_req, wr_req, pre_req, ref_req, ba, ra, ca, id, len,
         input                   act_gnt, rd_gnt, wr_gnt, pre_gnt, ref_gnt
     );
 endinterface

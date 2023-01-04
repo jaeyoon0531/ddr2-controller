@@ -35,7 +35,7 @@ module SAL_WR_CTRL
 
         .empty_o                        (wdata_fifo_empty),
         .aempty_o                       (/* NC */),
-        .rden_i                         (axi_r_if.rvalid & axi_r_if.rready),
+        .rden_i                         (dfi_wr_if.wrdata_en),
         .rdata_o                        ({dfi_wr_if.wrdata, dfi_wr_if.wrdata_mask})
     );
     assign  axi_w_if.wready             = ~wdata_fifo_full;
@@ -48,10 +48,10 @@ module SAL_WR_CTRL
             wren_shift_reg              <= 16'h0;
         end
         else if (sched_if.wr_gnt) begin
-            wren_shift_reg              <= {wren_shift_reg[14:1], 2'b11};                
+            wren_shift_reg              <= {wren_shift_reg[14:1], 2'b11};
         end
         else begin
-            wren_shift_reg              <= {wren_shift_reg[14:0], 1'b0};                
+            wren_shift_reg              <= {wren_shift_reg[14:0], 1'b0};
         end
 
     assign  dfi_wr_if.wrdata_en         = wren_shift_reg[sched_timing_if.dfi_wren_lat];
@@ -83,7 +83,7 @@ module SAL_WR_CTRL
         .rdata_o                        (axi_b_if.bid)
     );
 
-    assign  axi_b_if.bresp              = 2'b00;    // OKAY
+    assign  axi_b_if.bresp              = `AXI_RESP_OKAY;
     assign  axi_b_if.bvalid             = ~bid_fifo_empty;
 
 endmodule

@@ -8,6 +8,22 @@
 `define AXI_ADDR_WIDTH                          32
 `define AXI_DATA_WIDTH                          128
 `define AXI_ID_WIDTH                            4
+`define AXI_LEN_WIDTH                           4
+
+`define AXI_SIZE_8                              3'b000
+`define AXI_SIZE_16                             3'b001
+`define AXI_SIZE_32                             3'b010
+`define AXI_SIZE_64                             3'b011
+`define AXI_SIZE_128                            3'b100
+
+`define AXI_BURST_FIXED                         2'b00
+`define AXI_BURST_INCR                          2'b01
+`define AXI_BURST_WRAP                          2'b11
+
+`define AXI_RESP_OKAY                           2'b00
+`define AXI_RESP_EXOKAY                         2'b01
+`define AXI_RESP_SLVERR                         2'b10
+`define AXI_RESP_DECERR                         2'b11
 
 // DFI interface
 `define DFI_CS_WIDTH                            2
@@ -22,13 +38,18 @@
 `define DRAM_BA_WIDTH                           `DFI_BA_WIDTH
 `define DRAM_ADDR_WIDTH                         `DFI_ADDR_WIDTH
 
+`define BURST_LENGTH                            4
+
+`define CAS_LATENCY                             5
+`define WRITE_LATENCY                           4
+
 // derived parameters
 `define DRAM_BK_CNT                             1<<`DRAM_BA_WIDTH
 
 // DRAM timing
 `include "ddr2_model_parameters.vh"
 
-`define ROUND_UP(x)                             ((x+`CLK_PERIOD*1000-1)/(`CLK_PERIOD*1000))
+`define ROUND_UP(x)                             ((x+int'(`CLK_PERIOD*1000)-1)/(int'(`CLK_PERIOD*1000)))
 
 `define T_RCD_WIDTH                             3
 `define T_RCD_VALUE_M1                          (`ROUND_UP(TRCD)-1)
@@ -45,9 +66,9 @@
 `define T_RRD_WIDTH                             4
 `define T_RRD_VALUE_M1                          (`ROUND_UP(TRRD)-1)
 `define T_CCD_WIDTH                             2
-`define T_CCD_VALUE_M1                          TCCD-1      // in clock cycles
+`define T_CCD_VALUE_M1                          (TCCD-1)      // in clock cycles
 `define T_WTR_WIDTH                             8
-`define T_WTR_VALUE_M1                          8'd1
+`define T_WTR_VALUE_M1                          (`CAS_LATENCY -1 + `BURST_LENGTH/2 + `ROUND_UP(TWTR)-1)
 `define T_RTW_WIDTH                             8
 `define T_RTW_VALUE_M1                          8'd1
 

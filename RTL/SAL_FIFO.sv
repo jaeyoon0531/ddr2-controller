@@ -65,13 +65,7 @@ module SAL_FIFO #(
     always_comb begin
         wrptr_n                     = wrptr;
         rdptr_n                     = rdptr;
-
-        if (wren_i & ~rden_i) begin
-            cnt_n                       = cnt + 'd1;
-        end
-        else if (~wren_i & rden_i) begin
-            cnt_n                       = cnt - 'd1;
-        end
+        cnt_n                       = cnt;
 
         if (wren_i & ~full) begin
             wrptr_n                     = wrptr + 'd1;
@@ -79,6 +73,13 @@ module SAL_FIFO #(
 
         if (rden_i & ~empty) begin
             rdptr_n                     = rdptr + 'd1;
+        end
+
+        if (wren_i & ~rden_i) begin
+            cnt_n                       = cnt + 'd1;
+        end
+        else if (~wren_i & rden_i) begin
+            cnt_n                       = cnt - 'd1;
         end
 
         full_n                      = (wrptr_n[DEPTH_LG2]!=rdptr_n[DEPTH_LG2])
@@ -91,7 +92,7 @@ module SAL_FIFO #(
     // synthesis translate_off
     always @(posedge clk) begin
         if (full_o & wren_i) begin
-            $display("FIFO overflow");
+            $display("@%t FIFO %m overflow", $time);
             @(posedge clk);
             $finish;
         end
@@ -99,7 +100,7 @@ module SAL_FIFO #(
 
     always @(posedge clk) begin
         if (empty_o & rden_i) begin
-            $display("FIFO underflow");
+            $display("@%t FIFO %m underflow", $time);
             @(posedge clk);
             $finish;
         end

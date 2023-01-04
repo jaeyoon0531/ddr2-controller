@@ -1,4 +1,5 @@
 `include "TIME_SCALE.svh"
+`include "SAL_DDR_PARAMS.svh"
 
 module ddr2_dimm (
     input   wire                ck,
@@ -51,7 +52,7 @@ module ddr2_dimm (
                                3'd5,    // write recover=6
                                1'b0,    // DLL reset
                                1'b0,    // normal
-                               3'd5,    // CAS latency=5
+                               3'd`CAS_LATENCY,// CAS latency=5
                                1'b0,    // sequential 
                                3'd2},   // BL4
                               'h400,    // DQS# Disable

@@ -38,7 +38,9 @@ module SAL_BK_CTRL
                                 is_t_rtp_met,
                                 is_t_wtp_met;
     wire                        is_t_rrd_met,
-                                is_t_ccd_met;
+                                is_t_ccd_met,
+                                is_t_rtw_met,
+                                is_t_wtr_met;
 
     always_ff @(posedge clk)
         if (~rst_n) begin
@@ -66,6 +68,7 @@ module SAL_BK_CTRL
         sched_if.ra                 = 'hx;
         sched_if.ca                 = 'hx;
         sched_if.id                 = 'hx;
+        sched_if.len                = 'hx;
 
         case (state)
             S_CLOSED: begin     // the bank is closed
@@ -88,20 +91,26 @@ module SAL_BK_CTRL
             S_OPEN: begin
                 if (bk_req_if.valid) begin
                     if (cur_ra == bk_req_if.ra) begin // bank hit
-                        if (is_t_rcd_met & is_t_ccd_met) begin
-                            if (bk_req_if.wr) begin
-                                // WRITE command
+                        if (bk_req_if.wr) begin
+                            // WRITE command
+                            if (is_t_rcd_met & is_t_ccd_met & is_t_rtw_met) begin
                                 sched_if.wr_gnt             = 1'b1;
                                 sched_if.ca                 = bk_req_if.ca;
                                 sched_if.id                 = bk_req_if.id;
+
+                                bk_req_if.ready             = 1'b1;
                             end
-                            else begin
-                                // READ command
+                        end
+                        else begin
+                            // READ command
+                            if (is_t_rcd_met & is_t_ccd_met & is_t_wtr_met) begin
                                 sched_if.rd_gnt             = 1'b1;
                                 sched_if.ca                 = bk_req_if.ca;
                                 sched_if.id                 = bk_req_if.id;
+                                sched_if.len                = bk_req_if.len;
+
+                                bk_req_if.ready             = 1'b1;
                             end
-                            bk_req_if.ready             = 1'b1;
                         end
                     end
                     else begin  // bank miss
@@ -169,7 +178,7 @@ module SAL_BK_CTRL
             dfi_ctrl_if.addr            <= 'hx & 16'b1111_1011_1111_1111;
             dfi_ctrl_if.odt             <= 'hx;
         end
-        else begin	// DESELECT
+        else begin      // DESELECT
             dfi_ctrl_if.cke             <= 1'b1;
             dfi_ctrl_if.cs_n            <= {`DFI_CS_WIDTH{1'b1}};
             dfi_ctrl_if.ras_n           <= 1'bx;
@@ -200,6 +209,27 @@ module SAL_BK_CTRL
         .is_zero_o                  (is_t_ccd_met)
     );
 
+    SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_RTW_WIDTH)) u_rtw_cnt
+    (
+        .clk                        (clk),
+        .rst_n                      (rst_n),
+
+        .reset_cmd_i                (sched_if.rd_gnt),
+        .reset_value_i              (sched_timing_if.t_rtw_m1),
+        .is_zero_o                  (is_t_rtw_met)
+    );
+
+    SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_WTR_WIDTH)) u_wtr_cnt
+    (
+        .clk                        (clk),
+        .rst_n                      (rst_n),
+
+        .reset_cmd_i                (sched_if.wr_gnt),
+        .reset_value_i              (sched_timing_if.t_wtr_m1),
+        .is_zero_o                  (is_t_wtr_met)
+    );
+
+    // per-bank
     SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_RCD_WIDTH)) u_rcd_cnt
     (
         .clk                        (clk),

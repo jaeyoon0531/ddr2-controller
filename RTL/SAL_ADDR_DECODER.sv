@@ -42,6 +42,9 @@ module SAL_ADDR_DECODER
     end
 
     always_comb begin
+        axi_aw_if.aready                = 1'b0;
+        axi_ar_if.aready                = 1'b0;
+
         // WR (addr/data) are ready
         if (axi_aw_if.avalid & (wdata_trans_cnt!='d0)) begin
             /*
@@ -53,13 +56,13 @@ module SAL_ADDR_DECODER
                 bk_req_if_arr[i].wr     = 1'b1;
             end
             */
-            bk_req_if_arr[0].id     = axi_aw_if.aid;
-            bk_req_if_arr[0].ra     = get_dram_ra(axi_aw_if.aaddr);
-            bk_req_if_arr[0].ca     = get_dram_ca(axi_aw_if.aaddr);
-            bk_req_if_arr[0].len    = axi_aw_if.alen;
-            bk_req_if_arr[0].wr     = 1'b1;
-            bk_req_if_arr[0].valid  = axi_aw_if.avalid;
-            axi_aw_if.aready        = bk_req_if_arr[0].ready;
+            bk_req_if_arr[0].id         = axi_aw_if.aid;
+            bk_req_if_arr[0].ra         = get_dram_ra(axi_aw_if.aaddr);
+            bk_req_if_arr[0].ca         = get_dram_ca(axi_aw_if.aaddr);
+            bk_req_if_arr[0].len        = axi_aw_if.alen;
+            bk_req_if_arr[0].wr         = 1'b1;
+            bk_req_if_arr[0].valid      = axi_aw_if.avalid;
+            axi_aw_if.aready            = bk_req_if_arr[0].ready;
         end
         else
         begin
@@ -72,13 +75,13 @@ module SAL_ADDR_DECODER
                 bk_req_if_arr[i].wr     = 1'b0;
             end
             */
-            bk_req_if_arr[0].id     = axi_ar_if.aid;
-            bk_req_if_arr[0].ra     = get_dram_ra(axi_ar_if.aaddr);
-            bk_req_if_arr[0].ca     = get_dram_ca(axi_ar_if.aaddr);
-            bk_req_if_arr[0].len    = axi_ar_if.alen;
-            bk_req_if_arr[0].wr     = 1'b0;
-            bk_req_if_arr[0].valid  = axi_ar_if.avalid;
-            axi_ar_if.aready        = bk_req_if_arr[0].ready;
+            bk_req_if_arr[0].id         = axi_ar_if.aid;
+            bk_req_if_arr[0].ra         = get_dram_ra(axi_ar_if.aaddr);
+            bk_req_if_arr[0].ca         = get_dram_ca(axi_ar_if.aaddr);
+            bk_req_if_arr[0].len        = axi_ar_if.alen;
+            bk_req_if_arr[0].wr         = 1'b0;
+            bk_req_if_arr[0].valid      = axi_ar_if.avalid;
+            axi_ar_if.aready            = bk_req_if_arr[0].ready;
         end
     end
 
