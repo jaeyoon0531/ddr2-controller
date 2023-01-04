@@ -73,7 +73,7 @@ module SAL_WR_CTRL
         .DEPTH_LG2                      (3),
         .DATA_WIDTH                     (`AXI_ID_WIDTH)
     )
-    rid_fifo
+    bid_fifo
     (
         .clk                            (clk),
         .rst_n                          (rst_n),

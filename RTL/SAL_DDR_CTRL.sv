@@ -31,6 +31,7 @@ module SAL_DDR_CTRL
     // scheduling output
     SCHED_IF                    sched_if();
 
+    // Configurations
     SAL_CFG                         u_cfg
     (
         .clk                        (clk),
