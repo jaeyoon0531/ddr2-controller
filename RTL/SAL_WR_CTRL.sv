@@ -35,7 +35,7 @@ module SAL_WR_CTRL
 
         .empty_o                        (wdata_fifo_empty),
         .aempty_o                       (/* NC */),
-        .rden_i                         (axi_r_if.rvalid & axi_r_if.rready),
+        .rden_i                         (dfi_wr_if.wrdata_en),
         .rdata_o                        ({dfi_wr_if.wrdata, dfi_wr_if.wrdata_mask})
     );
     assign  axi_w_if.wready             = ~wdata_fifo_full;

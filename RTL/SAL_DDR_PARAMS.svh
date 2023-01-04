@@ -47,7 +47,7 @@
 `define T_CCD_WIDTH                             2
 `define T_CCD_VALUE_M1                          TCCD-1      // in clock cycles
 `define T_WTR_WIDTH                             8
-`define T_WTR_VALUE_M1                          8'd1
+`define T_WTR_VALUE_M1                          8'd4
 `define T_RTW_WIDTH                             8
 `define T_RTW_VALUE_M1                          8'd1
 

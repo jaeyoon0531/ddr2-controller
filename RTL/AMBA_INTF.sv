@@ -237,18 +237,16 @@ interface AXI_B_IF
         */
     endfunction
 
-    task transfer(  input   [ID_WIDTH-1:0]      id,
-                    input   [1:0]               resp);
-        SRC_CB.bvalid               <= 1'b1;
-        SRC_CB.bid                  <= id;
-        SRC_CB.bresp                <= resp;
+    task receive(   output  [ID_WIDTH-1:0]      id,
+                    output  [1:0]               resp);
+        DST_CB.bready               <= 1'b1;
         @(posedge clk);
-        while (bready!=1'b1) begin
+        while (bvalid!=1'b1) begin
             @(posedge clk);
         end
-        SRC_CB.bvalid               <= 1'b0;
-        SRC_CB.bid                  <= 'hx;
-        SRC_CB.bresp                <= 'hx;
+        id                          = bid;
+        resp                        = bresp;
+        DST_CB.bready               <= 1'b0;
     endtask
     // synthesis translate_on
 endinterface
