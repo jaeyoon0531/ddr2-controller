@@ -144,39 +144,25 @@ module SAL_TB_TOP;
         .rdqs_n                     (ddr_rdqs_n)
     );
 
+    AXI_A_IF                        slave_axi_ar_if   (.clk(clk), .rst_n(rst_n));
+    AXI_R_IF                        slave_axi_r_if    (.clk(clk), .rst_n(rst_n));
+    AXI_A_IF                        slave_axi_aw_if   (.clk(clk), .rst_n(rst_n));
+    AXI_W_IF                        slave_axi_w_if    (.clk(clk), .rst_n(rst_n));
+    AXI_B_IF                        slave_axi_b_if    (.clk(clk), .rst_n(rst_n));
+
     SAL_TEST_BENCH test(
         axi_ar_if,
         axi_w_if,
         axi_b_if,
         axi_ar_if,
-        axi_r_if
+        axi_r_if,
+
+        slave_axi_ar_if,
+        slave_axi_w_if,
+        slave_axi_b_if,
+        slave_axi_ar_if,
+        slave_axi_r_if
     );
 
-    logic       [`AXI_ID_WIDTH-1:0]             rid;
-    logic       [`AXI_DATA_WIDTH-1:0]           rdata;
-    logic       [1:0]                           rresp;
-    logic                                       rlast;
-
-    initial begin
-        axi_aw_if.init();
-        axi_ar_if.init();
-
-        // wait for a reset release
-        @(posedge rst_n);
-
-        // wait enough cycles for DRAM to finish their initialization
-        repeat (250) @(posedge clk);
-
-        axi_ar_if.transfer('d0, 'd0, 'd0, 'd0, 'd0);
-        axi_ar_if.transfer('d0, 'd4, 'd0, 'd0, 'd0);
-
-        axi_r_if.receive(rid, rdata, rresp, rlast);
-        axi_r_if.receive(rid, rdata, rresp, rlast);
-        axi_r_if.receive(rid, rdata, rresp, rlast);
-        axi_r_if.receive(rid, rdata, rresp, rlast);
-
-        repeat (50) @(posedge clk);
-        $finish;
-    end
 
 endmodule // sim_tb_top
