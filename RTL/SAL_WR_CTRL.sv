@@ -7,16 +7,21 @@ module SAL_WR_CTRL
     input                       clk,
     input                       rst_n,
 
-    SCHED_TIMING_IF.MON         sched_timing_if,
+    // timing parameters
+    TIMING_IF.MON               timing_if,
+
+    // scheduling output
     SCHED_IF.MON                sched_if,
 
+    // write data from AXI
     AXI_W_IF.DST                axi_w_if,
     AXI_B_IF.SRC                axi_b_if,
+    // write data to DDR PHY
     DFI_WR_IF.SRC               dfi_wr_if
 );
 
     //----------------------------------------------------------
-    // buffer write data
+    // buffer AXI write data
     //----------------------------------------------------------
     wire                                wdata_fifo_full;
     SAL_FIFO
@@ -54,7 +59,7 @@ module SAL_WR_CTRL
             wren_shift_reg              <= {wren_shift_reg[14:0], 1'b0};
         end
 
-    assign  dfi_wr_if.wrdata_en         = wren_shift_reg[sched_timing_if.dfi_wren_lat];
+    assign  dfi_wr_if.wrdata_en         = wren_shift_reg[timing_if.dfi_wren_lat];
 
     //----------------------------------------------------------
     // write response path

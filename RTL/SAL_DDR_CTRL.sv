@@ -23,11 +23,13 @@ module SAL_DDR_CTRL
     DFI_RD_IF.DST               dfi_rd_if
 );
 
-    BK_TIMING_IF                bk_timing_if                    ();
-    SCHED_TIMING_IF             sched_timing_if                 ();
-    BK_REQ_IF                   bk_req_if_arr[`DRAM_BK_CNT]     (.clk(clk), .rst_n(rst_n));
-    //SCHED_IF                    bk_sched_if_arr[`DRAM_BK_CNT]   (.clk(clk), .rst_n(rst_n));
-    SCHED_IF                    sched_if                        (.clk(clk), .rst_n(rst_n));
+    // timing parameters
+    TIMING_IF                   timing_if();
+
+    // request to a bank
+    BK_REQ_IF                   bk_req_if();
+    // scheduling output
+    SCHED_IF                    sched_if();
 
     SAL_CFG                         u_cfg
     (
@@ -36,8 +38,7 @@ module SAL_DDR_CTRL
 
         .apb_if                     (apb_if),
 
-        .bk_timing_if               (bk_timing_if),
-        .sched_timing_if            (sched_timing_if)
+        .timing_if                  (timing_if)
     );
 
     SAL_ADDR_DECODER                u_decoder
@@ -48,7 +49,8 @@ module SAL_DDR_CTRL
         .axi_ar_if                  (axi_ar_if),
         .axi_aw_if                  (axi_aw_if),
         .axi_w_if                   (axi_w_if),
-        .bk_req_if_arr              (bk_req_if_arr)
+
+        .bk_req_if                  (bk_req_if)
     );
 
     SAL_BK_CTRL                     u_bank_ctrl
@@ -56,14 +58,22 @@ module SAL_DDR_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .bk_req_if                  (bk_req_if_arr[0]),
-        .bk_timing_if               (bk_timing_if),
-        .sched_timing_if            (sched_timing_if),
+        .timing_if                  (timing_if),
+
+        .bk_req_if                  (bk_req_if),
         .sched_if                   (sched_if),
-        .dfi_ctrl_if                (dfi_ctrl_if),
 
         .ref_req_i                  (1'b0),
         .ref_gnt_o                  ()
+    );
+
+    SAL_CTRL_ENCODER                u_ctrl_encoder
+    (
+        .clk                        (clk),
+        .rst_n                      (rst_n),
+
+        .sched_if                   (sched_if),
+        .dfi_ctrl_if                (dfi_ctrl_if)
     );
 
     SAL_WR_CTRL                     u_wr_ctrl
@@ -71,7 +81,7 @@ module SAL_DDR_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .sched_timing_if            (sched_timing_if),
+        .timing_if                  (timing_if),
         .sched_if                   (sched_if),
 
         .axi_w_if                   (axi_w_if),
@@ -84,7 +94,7 @@ module SAL_DDR_CTRL
         .clk                        (clk),
         .rst_n                      (rst_n),
 
-        .sched_timing_if            (sched_timing_if),
+        .timing_if                  (timing_if),
         .sched_if                   (sched_if),
         .dfi_rd_if                  (dfi_rd_if),
         .axi_r_if                   (axi_r_if)

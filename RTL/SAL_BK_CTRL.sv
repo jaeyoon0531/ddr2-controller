@@ -7,16 +7,13 @@ module SAL_BK_CTRL
     input                       clk,
     input                       rst_n,
 
+    // timing parameters
+    TIMING_IF.MON               timing_if,
+
     // request from the address decoder
     BK_REQ_IF.DST               bk_req_if,
-    // timing parameters
-    BK_TIMING_IF.MON            bk_timing_if,
-    SCHED_TIMING_IF.MON         sched_timing_if,
     // scheduling interface
     SCHED_IF.SRC                sched_if,
-
-    // request to DDR PHY
-    DFI_CTRL_IF.SRC             dfi_ctrl_if,
 
     // per-bank auto-refresh requests
     input   wire                ref_req_i,
@@ -126,76 +123,13 @@ module SAL_BK_CTRL
         endcase
     end
 
-    // Follow the command truth table in the spec
-    always_ff @(posedge clk)
-        if (sched_if.ref_gnt) begin
-            dfi_ctrl_if.cke             <= 1'b1;
-            dfi_ctrl_if.cs_n[0]         <= 1'b0;
-            dfi_ctrl_if.ras_n           <= 1'b0;
-            dfi_ctrl_if.cas_n           <= 1'b0;
-            dfi_ctrl_if.we_n            <= 1'b1;
-            dfi_ctrl_if.ba              <= 'hx;
-            dfi_ctrl_if.addr            <= 'hx;
-            dfi_ctrl_if.odt             <= 'hx;
-        end
-        else if (sched_if.act_gnt) begin
-            dfi_ctrl_if.cke             <= 1'b1;
-            dfi_ctrl_if.cs_n[0]         <= 1'b0;
-            dfi_ctrl_if.ras_n           <= 1'b0;
-            dfi_ctrl_if.cas_n           <= 1'b1;
-            dfi_ctrl_if.we_n            <= 1'b1;
-            dfi_ctrl_if.ba              <= sched_if.ba;
-            dfi_ctrl_if.addr            <= sched_if.ra;
-            dfi_ctrl_if.odt             <= 'h0;
-        end
-        else if (sched_if.wr_gnt) begin
-            dfi_ctrl_if.cke             <= 1'b1;
-            dfi_ctrl_if.cs_n[0]         <= 1'b0;
-            dfi_ctrl_if.ras_n           <= 1'b1;
-            dfi_ctrl_if.cas_n           <= 1'b0;
-            dfi_ctrl_if.we_n            <= 1'b0;
-            dfi_ctrl_if.ba              <= sched_if.ba;
-            dfi_ctrl_if.addr            <= sched_if.ca;
-            dfi_ctrl_if.odt             <= 'h0;
-        end
-        else if (sched_if.rd_gnt) begin
-            dfi_ctrl_if.cke             <= 1'b1;
-            dfi_ctrl_if.cs_n[0]         <= 1'b0;
-            dfi_ctrl_if.ras_n           <= 1'b1;
-            dfi_ctrl_if.cas_n           <= 1'b0;
-            dfi_ctrl_if.we_n            <= 1'b1;
-            dfi_ctrl_if.ba              <= sched_if.ba;
-            dfi_ctrl_if.addr            <= sched_if.ca;
-            dfi_ctrl_if.odt             <= 'h0;
-        end else if (sched_if.pre_gnt) begin
-            dfi_ctrl_if.cke             <= 1'b1;
-            dfi_ctrl_if.cs_n[0]         <= 1'b0;
-            dfi_ctrl_if.ras_n           <= 1'b0;
-            dfi_ctrl_if.cas_n           <= 1'b1;
-            dfi_ctrl_if.we_n            <= 1'b0;
-            dfi_ctrl_if.ba              <= sched_if.ba;
-            // per-bank refresh
-            dfi_ctrl_if.addr            <= 'hx & 16'b1111_1011_1111_1111;
-            dfi_ctrl_if.odt             <= 'hx;
-        end
-        else begin      // DESELECT
-            dfi_ctrl_if.cke             <= 1'b1;
-            dfi_ctrl_if.cs_n            <= {`DFI_CS_WIDTH{1'b1}};
-            dfi_ctrl_if.ras_n           <= 1'bx;
-            dfi_ctrl_if.cas_n           <= 1'bx;
-            dfi_ctrl_if.we_n            <= 1'bx;
-            dfi_ctrl_if.ba              <= 'hx;
-            dfi_ctrl_if.addr            <= 'hx;
-            dfi_ctrl_if.odt             <= 'hx;
-        end
-
     SAL_TIMING_CNTR  #(.CNTR_WIDTH(`T_RRD_WIDTH)) u_rrd_cnt
     (
         .clk                        (clk),
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.act_gnt),
-        .reset_value_i              (sched_timing_if.t_rrd_m1),
+        .reset_value_i              (timing_if.t_rrd_m1),
         .is_zero_o                  (is_t_rrd_met)
     );
 
@@ -205,7 +139,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.rd_gnt | sched_if.wr_gnt),
-        .reset_value_i              (sched_timing_if.t_ccd_m1),
+        .reset_value_i              (timing_if.t_ccd_m1),
         .is_zero_o                  (is_t_ccd_met)
     );
 
@@ -215,7 +149,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.rd_gnt),
-        .reset_value_i              (sched_timing_if.t_rtw_m1),
+        .reset_value_i              (timing_if.t_rtw_m1),
         .is_zero_o                  (is_t_rtw_met)
     );
 
@@ -225,7 +159,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.wr_gnt),
-        .reset_value_i              (sched_timing_if.t_wtr_m1),
+        .reset_value_i              (timing_if.t_wtr_m1),
         .is_zero_o                  (is_t_wtr_met)
     );
 
@@ -236,7 +170,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.act_gnt),
-        .reset_value_i              (bk_timing_if.t_rcd_m1),
+        .reset_value_i              (timing_if.t_rcd_m1),
         .is_zero_o                  (is_t_rcd_met)
     );
 
@@ -246,7 +180,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.pre_gnt),
-        .reset_value_i              (bk_timing_if.t_rp_m1),
+        .reset_value_i              (timing_if.t_rp_m1),
         .is_zero_o                  (is_t_rp_met)
     );
 
@@ -256,7 +190,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.act_gnt),
-        .reset_value_i              (bk_timing_if.t_ras_m1),
+        .reset_value_i              (timing_if.t_ras_m1),
         .is_zero_o                  (is_t_ras_met)
     );
 
@@ -266,7 +200,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.ref_gnt),
-        .reset_value_i              (bk_timing_if.t_rfc_m1),
+        .reset_value_i              (timing_if.t_rfc_m1),
         .is_zero_o                  (is_t_rfc_met)
     );
 
@@ -276,7 +210,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.rd_gnt),
-        .reset_value_i              (bk_timing_if.t_rtp_m1),
+        .reset_value_i              (timing_if.t_rtp_m1),
         .is_zero_o                  (is_t_rtp_met)
     );
 
@@ -286,7 +220,7 @@ module SAL_BK_CTRL
         .rst_n                      (rst_n),
 
         .reset_cmd_i                (sched_if.wr_gnt),
-        .reset_value_i              (bk_timing_if.t_wtp_m1),
+        .reset_value_i              (timing_if.t_wtp_m1),
         .is_zero_o                  (is_t_wtp_met)
     );
 

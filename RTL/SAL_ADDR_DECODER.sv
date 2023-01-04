@@ -11,8 +11,9 @@ module SAL_ADDR_DECODER
     AXI_A_IF.DST                axi_ar_if,
     AXI_A_IF.DST                axi_aw_if,
     AXI_W_IF                    axi_w_if,
+
     // request to bank controller
-    BK_REQ_IF.SRC               bk_req_if_arr[`DRAM_BK_CNT]
+    BK_REQ_IF.SRC               bk_req_if
 );
 
     logic   [4:0]               wdata_trans_cnt,    wdata_trans_cnt_n;
@@ -56,13 +57,13 @@ module SAL_ADDR_DECODER
                 bk_req_if_arr[i].wr     = 1'b1;
             end
             */
-            bk_req_if_arr[0].id         = axi_aw_if.aid;
-            bk_req_if_arr[0].ra         = get_dram_ra(axi_aw_if.aaddr);
-            bk_req_if_arr[0].ca         = get_dram_ca(axi_aw_if.aaddr);
-            bk_req_if_arr[0].len        = axi_aw_if.alen;
-            bk_req_if_arr[0].wr         = 1'b1;
-            bk_req_if_arr[0].valid      = axi_aw_if.avalid;
-            axi_aw_if.aready            = bk_req_if_arr[0].ready;
+            bk_req_if.id                = axi_aw_if.aid;
+            bk_req_if.ra                = get_dram_ra(axi_aw_if.aaddr);
+            bk_req_if.ca                = get_dram_ca(axi_aw_if.aaddr);
+            bk_req_if.len               = axi_aw_if.alen;
+            bk_req_if.wr                = 1'b1;
+            bk_req_if.valid             = axi_aw_if.avalid;
+            axi_aw_if.aready            = bk_req_if.ready;
         end
         else
         begin
@@ -75,13 +76,13 @@ module SAL_ADDR_DECODER
                 bk_req_if_arr[i].wr     = 1'b0;
             end
             */
-            bk_req_if_arr[0].id         = axi_ar_if.aid;
-            bk_req_if_arr[0].ra         = get_dram_ra(axi_ar_if.aaddr);
-            bk_req_if_arr[0].ca         = get_dram_ca(axi_ar_if.aaddr);
-            bk_req_if_arr[0].len        = axi_ar_if.alen;
-            bk_req_if_arr[0].wr         = 1'b0;
-            bk_req_if_arr[0].valid      = axi_ar_if.avalid;
-            axi_ar_if.aready            = bk_req_if_arr[0].ready;
+            bk_req_if.id                = axi_ar_if.aid;
+            bk_req_if.ra                = get_dram_ra(axi_ar_if.aaddr);
+            bk_req_if.ca                = get_dram_ca(axi_ar_if.aaddr);
+            bk_req_if.len               = axi_ar_if.alen;
+            bk_req_if.wr                = 1'b0;
+            bk_req_if.valid             = axi_ar_if.avalid;
+            axi_ar_if.aready            = bk_req_if.ready;
         end
     end
 
